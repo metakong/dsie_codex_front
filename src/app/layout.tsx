@@ -23,11 +23,35 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://thedsiecodex.online"),
   title: "The DSIE Codex LLC",
   description: "Fractional AI integration consultancy. We build, secure, and operate custom AI systems for small businesses.",
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.svg",
+    apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    title: "The DSIE Codex LLC",
+    description: "Fractional AI integration consultancy. We build, secure, and operate custom AI systems for small businesses.",
+    url: "https://thedsiecodex.online",
+    siteName: "The DSIE Codex",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "The DSIE Codex LLC — Fractional AI Integration",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The DSIE Codex LLC",
+    description: "Fractional AI integration consultancy. We build, secure, and operate custom AI systems for small businesses.",
+    images: ["/og-image.png"],
   },
 };
 

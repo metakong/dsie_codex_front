@@ -14,6 +14,8 @@ export default function Home() {
   const [painPoint, setPainPoint] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showStatusPanel, setShowStatusPanel] = useState(false);
+  // SCAFFOLD — Roadmap Phase 3: report rendering + email capture are wired when
+  // /api/demo returns real Agent 4 output. Intentionally inert until then.
   const [showReport, setShowReport] = useState(false);
   const [emailInput, setEmailInput] = useState("");
   const [isDemoStub, setIsDemoStub] = useState(false);
@@ -185,8 +187,10 @@ export default function Home() {
           <div className="max-w-2xl mx-auto">
             {/* Input Card */}
             <form onSubmit={handleDemoSubmit} className="bg-surface border border-border p-6 md:p-8 rounded-sm">
+              <label htmlFor="businessType" className="sr-only">Business type</label>
               <input
                 type="text"
+                id="businessType"
                 required
                 maxLength={500}
                 value={businessType}
@@ -198,8 +202,10 @@ export default function Home() {
                 {500 - businessType.length} characters remaining
               </div>
               
+              <label htmlFor="painPoint" className="sr-only">Biggest operational pain point</label>
               <textarea
                 required
+                id="painPoint"
                 maxLength={500}
                 value={painPoint}
                 onChange={(e) => setPainPoint(e.target.value)}
@@ -268,8 +274,10 @@ export default function Home() {
                 </div>
                 
                 <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                  <label htmlFor="demoEmail" className="sr-only">Enter your email</label>
                   <input
                     type="email"
+                    id="demoEmail"
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
                     placeholder="Enter your email"

@@ -9,7 +9,7 @@ consultancy based in Springfield, Missouri.
 
 ## Stack
 
-- Next.js 15 (App Router)
+- Next.js 16 (App Router)
 - TypeScript
 - Tailwind CSS v4
 - Vercel

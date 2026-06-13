@@ -2,8 +2,14 @@
 
 import { useState } from "react";
 
+const TIERS = [
+  { id: "flash",   label: "Flash Session — $347" },
+  { id: "stack",   label: "Stack Consultation — $247" },
+  { id: "unsure",  label: "Not Sure — Let's Talk" },
+] as const;
+
 export default function Book() {
-  const [selectedTier, setSelectedTier] = useState("Not Sure - Let's Talk");
+  const [selectedTier, setSelectedTier] = useState<typeof TIERS[number]["id"]>("unsure");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
 
@@ -65,18 +71,18 @@ export default function Book() {
           
           {/* Tier pills */}
           <div className="flex flex-wrap gap-3 mb-8">
-            {["Flash Session — $347", "Stack Consultation — $247", "Not Sure — Let's Talk"].map((tier) => (
+            {TIERS.map((tier) => (
               <button
-                key={tier}
+                key={tier.id}
                 type="button"
-                onClick={() => setSelectedTier(tier)}
+                onClick={() => setSelectedTier(tier.id)}
                 className={`border text-xs font-mono px-4 py-2 transition-all duration-200 rounded-sm cursor-pointer ${
-                  selectedTier === tier
+                  selectedTier === tier.id
                     ? "border-gold text-gold bg-gold/10"
                     : "border-border text-cream/60 hover:border-gold hover:text-gold"
                 }`}
               >
-                {tier}
+                {tier.label}
               </button>
             ))}
           </div>
@@ -106,39 +112,49 @@ export default function Book() {
           </p>
 
           <form onSubmit={handleIntakeSubmit} className="flex flex-col">
+            <label htmlFor="businessName" className="sr-only">Business name</label>
             <input
               type="text"
+              id="businessName"
               name="businessName"
               placeholder="Business name"
               required
               className="w-full bg-background border border-border text-cream placeholder-muted p-3 font-sans focus:border-gold focus:outline-none transition-colors duration-200 mb-4"
             />
             
+            <label htmlFor="yourName" className="sr-only">Your name</label>
             <input
               type="text"
+              id="yourName"
               name="yourName"
               placeholder="Your name"
               required
               className="w-full bg-background border border-border text-cream placeholder-muted p-3 font-sans focus:border-gold focus:outline-none transition-colors duration-200 mb-4"
             />
             
+            <label htmlFor="email" className="sr-only">Email address</label>
             <input
               type="email"
+              id="email"
               name="email"
               placeholder="Email address"
               required
               className="w-full bg-background border border-border text-cream placeholder-muted p-3 font-sans focus:border-gold focus:outline-none transition-colors duration-200 mb-4"
             />
             
+            <label htmlFor="industry" className="sr-only">Business type / industry</label>
             <input
               type="text"
+              id="industry"
               name="industry"
               placeholder="Business type / industry"
               required
               className="w-full bg-background border border-border text-cream placeholder-muted p-3 font-sans focus:border-gold focus:outline-none transition-colors duration-200 mb-4"
             />
 
+            <label htmlFor="revenue" className="sr-only">Estimated annual revenue</label>
             <select
+              id="revenue"
               name="revenue"
               defaultValue=""
               required
@@ -152,7 +168,9 @@ export default function Book() {
               <option value="$5M+">$5M+</option>
             </select>
 
+            <label htmlFor="painPoint" className="sr-only">Biggest operational pain point</label>
             <textarea
+              id="painPoint"
               name="painPoint"
               placeholder="Biggest operational pain point"
               required
@@ -160,7 +178,9 @@ export default function Book() {
               className="w-full bg-background border border-border text-cream placeholder-muted p-3 font-sans focus:border-gold focus:outline-none transition-colors duration-200 mb-4 resize-none"
             />
 
+            <label htmlFor="usingAI" className="sr-only">Currently using AI tools?</label>
             <select
+              id="usingAI"
               name="usingAI"
               defaultValue=""
               required
@@ -173,7 +193,9 @@ export default function Book() {
               <option value="Not sure">Not sure</option>
             </select>
 
+            <label htmlFor="referral" className="sr-only">How did you find us?</label>
             <select
+              id="referral"
               name="referral"
               defaultValue=""
               required
