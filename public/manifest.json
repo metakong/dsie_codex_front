@@ -1,0 +1,16 @@
+{
+  "name": "The DSIE Codex",
+  "short_name": "DSIE Codex",
+  "description": "Fractional AI integration. Built, secured, and operated.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0A",
+  "theme_color": "#C9A84C",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
