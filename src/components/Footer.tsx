@@ -11,7 +11,7 @@ export default function Footer() {
         </p>
         
         <p className="font-sans text-muted text-sm mt-4">
-          Springfield, Missouri &middot; thedsiecodex.online
+          Springfield, Missouri &middot; thedsiecodex.com
         </p>
         
         <p className="font-mono text-terminal text-xs mt-6 tracking-widest">
