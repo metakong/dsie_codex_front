@@ -15,7 +15,7 @@
 Public marketing site for The DSIE Codex LLC, a fractional AI integration
 consultancy based in Springfield, Missouri.
 
-**Live at:** thedsiecodex.online (launching September 2026)
+**Live at:** [thedsiecodex.com](https://www.thedsiecodex.com) (launching September 2026)
 
 ---
 
@@ -24,7 +24,7 @@ consultancy based in Springfield, Missouri.
 - Next.js 16 (App Router)
 - TypeScript
 - Tailwind CSS v4
-- Vercel
+- Cloudflare Workers via the [@opennextjs/cloudflare](https://opennext.js.org/cloudflare) (OpenNext) adapter
 
 ---
 
@@ -34,6 +34,54 @@ npm install
 npm run dev
 
 Open http://localhost:3000
+
+> `npm run dev` (plain Next.js dev server) is the **only** supported local run mode.
+> This is a Windows ARM64 machine; Cloudflare's local `workerd` runtime does not ship
+> for `win32-arm64`, so `wrangler dev`, `wrangler deploy`, and
+> `opennextjs-cloudflare preview` all fail locally. Do not attempt them here.
+
+---
+
+## Deployment
+
+**This working tree exists to update the live production site.** Local changes reach
+production through an automated pipeline — there is no manual deploy step.
+
+### Architecture (live since 2026-07-13)
+
+- **Host:** Cloudflare **Workers** (not Cloudflare Pages — a different product).
+  Next.js runs through the `@opennextjs/cloudflare` (OpenNext) adapter.
+- **Worker name:** `dsie-codex-front`.
+- **Domains:** `thedsiecodex.com` (canonical) and
+  [www.thedsiecodex.com](https://www.thedsiecodex.com), routed as custom domains on the Worker.
+- **Config files:** `wrangler.jsonc` (Worker name, `nodejs_compat`, `.open-next`
+  output paths, custom-domain routes) and `open-next.config.ts`. Do not delete or rename either.
+
+### CI/CD pipeline
+
+1. Commit your change.
+2. Push to `main` on `github.com/metakong/dsie_codex_front`.
+3. **Cloudflare Workers Builds** automatically builds and deploys to production (~2–3 min).
+
+There is **no** GitHub Actions deploy workflow — do not add one. The Cloudflare build
+runs `npm run build:cf` (installs `@opennextjs/cloudflare` + `wrangler`, then runs
+`opennextjs-cloudflare build`). Plain `npm run build` is local-only and does **not**
+produce a deployable artifact.
+
+For risky or structural changes, push to a **feature branch** first: Cloudflare generates
+a preview deployment at `<branch>-dsie-codex-front.deardorff-sean.workers.dev`. Verify
+there, then merge to `main`.
+
+### Constraints
+
+- **Never** add `output: "standalone"` to `next.config.ts` — it is incompatible with the
+  OpenNext adapter and was removed on 2026-07-13.
+- Runtime secrets (`JUNGLE_API_URL`, `JUNGLE_SECRET_KEY`) live in the Cloudflare dashboard
+  under the Worker's **Variables & Secrets**, never in committed files. `NEXT_PUBLIC_*`
+  build-time vars are set in the Cloudflare build configuration.
+- The `.open-next/` directory is build output and is gitignored — never commit it.
+- Check any new Next.js feature against the OpenNext Cloudflare adapter support matrix
+  before adopting it.
 
 ---
 
