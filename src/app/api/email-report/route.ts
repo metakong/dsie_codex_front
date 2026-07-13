@@ -43,6 +43,7 @@ export async function POST(req: Request) {
   }
 
   try {
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip")?.trim() || "127.0.0.1";
     const jungleApiUrl = process.env.JUNGLE_API_URL || "http://127.0.0.1:8000";
 
     if (!process.env.JUNGLE_SECRET_KEY) {
@@ -54,6 +55,7 @@ export async function POST(req: Request) {
       headers: {
         "Content-Type": "application/json",
         "x-jungle-secret": process.env.JUNGLE_SECRET_KEY || "",
+        "x-forwarded-for": clientIp,
       },
       body: JSON.stringify(result.data),
       signal: AbortSignal.timeout(15_000),

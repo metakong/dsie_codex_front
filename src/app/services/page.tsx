@@ -10,7 +10,7 @@ export default function Services() {
             // NO HIDDEN PRICING &middot; NO CONTACT FORMS TO LEARN A NUMBER
           </div>
           <h1 className="font-display text-cream text-5xl md:text-6xl mb-4 tracking-wide uppercase">
-            WHAT YOU'RE ACTUALLY BUYING
+            WHAT YOU&apos;RE ACTUALLY BUYING
           </h1>
           <p className="font-sans text-gold text-base md:text-lg max-w-2xl mx-auto font-medium">
             Every price listed. Every Tier 0 and Tier 1 fee credited toward the 

@@ -11,8 +11,8 @@ export default function About() {
             AN UNUSUAL COMBINATION
           </h1>
           <p className="font-sans text-cream/70 leading-relaxed text-base md:text-lg">
-            28 years in professional sales &mdash; Director of Business Development work 
-            that contributed to doubling toysrus.com's online revenue and 10x-ing 
+            28 years in professional sales &mdash; Director of Business Development work
+            that contributed to doubling toysrus.com&apos;s online revenue and 10x-ing
             acquisition rates at AP Wireless &mdash; built on top of 32 years of 
             personally breaking and rebuilding systems since age 13, plus over a year 
             of paid frontier AI annotation work writing rubrics and chain-of-thought 
@@ -34,8 +34,8 @@ export default function About() {
           </h2>
           <blockquote className="border-l-4 border-gold pl-6 md:pl-8 my-6">
             <p className="font-sans text-cream text-xl md:text-2xl leading-relaxed font-medium">
-              "If my solution isn't right for you, I'll tell you and 
-              point you somewhere better."
+              &quot;If my solution isn&apos;t right for you, I&apos;ll tell you and
+              point you somewhere better.&quot;
             </p>
           </blockquote>
           <p className="font-sans text-cream/50 text-sm mt-6 leading-relaxed">
@@ -62,7 +62,7 @@ export default function About() {
             </span>
           </div>
           <p className="font-sans text-muted text-sm tracking-wide">
-            Launching September 2026 &middot; thedsiecodex.online
+            Launching September 2026 &middot; thedsiecodex.com
           </p>
         </section>
       </div>

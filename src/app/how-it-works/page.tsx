@@ -94,7 +94,7 @@ export default function HowItWorks() {
                 <p className="font-sans text-cream/70 leading-relaxed text-sm md:text-base">
                   Operate, monitor, optimize. Your system runs in your accounts under 
                   your name. I maintain it, update it, and improve it monthly. You are 
-                  never locked in &mdash; but I'm there to make sure nothing breaks quietly.
+                  never locked in &mdash; but I&apos;m there to make sure nothing breaks quietly.
                 </p>
               </div>
             </div>
@@ -109,7 +109,7 @@ export default function HowItWorks() {
             // WHAT EVERYONE ELSE DOES INSTEAD
           </div>
           <p className="font-sans text-cream/70 leading-relaxed text-base md:text-lg">
-            Most AI consultants deliver a recommendation to a team you don't have. 
+            Most AI consultants deliver a recommendation to a team you don&apos;t have.
             Most managed AI services require your staff to build and configure 
             the tools themselves. The DSIE Codex builds the system, secures it 
             against real attack vectors, and operates it month to month. 
@@ -126,11 +126,11 @@ export default function HowItWorks() {
               // PROOF OF METHODOLOGY
             </div>
             <h2 className="font-display text-gold text-3xl md:text-4xl mb-6 tracking-wide uppercase">
-              FORCED TO WORK WHERE IT SHOULDN'T
+              FORCED TO WORK WHERE IT SHOULDN&apos;T
             </h2>
             <p className="font-sans text-cream/70 leading-relaxed text-sm md:text-base">
               The methodology behind every client deployment was first proven by forcing 
-              quantized language models onto a Snapdragon ARM laptop that Microsoft's own 
+              quantized language models onto a Snapdragon ARM laptop that Microsoft&apos;s own
               tooling refused to support &mdash; bypassing a RAM ceiling, injecting a runtime 
               the OS actively blocked, and building a working eight-agent orchestration 
               system on hardware it was never supposed to run on. The same builds that 

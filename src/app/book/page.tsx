@@ -88,7 +88,7 @@ export default function Book() {
             // QUICK INTAKE
           </div>
           <p className="font-sans text-cream/50 text-sm mb-8 leading-relaxed">
-            Fill this out before your session and I'll arrive prepared. 
+            Fill this out before your session and I&apos;ll arrive prepared.
             No spam. No nurture sequences.
           </p>
 

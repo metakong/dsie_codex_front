@@ -30,5 +30,8 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  // open-next.config.ts is consumed by the OpenNext CLI (which loads it itself, outside
+  // this tsconfig). Its "@opennextjs/cloudflare" import only exists in CI, where build:cf
+  // installs it — typechecking it locally fails "npm run build" on this machine.
+  "exclude": ["node_modules", "open-next.config.ts"]
 }

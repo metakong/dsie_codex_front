@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     // which violates script-src 'self' and prevents React from hydrating.
     // In dev, the browser blocks those scripts, event handlers never attach,
     // and forms fall back to native HTML submission (page reload = "text clears").
-    // All security headers are safe to omit locally — they protect the live VPS deployment.
+    // All security headers are safe to omit locally — they protect the live Cloudflare Workers deployment.
     if (process.env.NODE_ENV !== "production") {
       return [];
     }

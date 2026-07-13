@@ -42,16 +42,6 @@ export default function DemoTool() {
     };
   }, [showOverlay]);
 
-  // Close overlay on Escape key
-  useEffect(() => {
-    if (!showOverlay) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") handleClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [showOverlay]);
-
   const handleClose = () => {
     // Abort any in-flight stream before closing
     abortRef.current?.abort();
@@ -61,6 +51,16 @@ export default function DemoTool() {
     setIsOffline(false);
     setAgents(INITIAL_AGENTS);
   };
+
+  // Close overlay on Escape key
+  useEffect(() => {
+    if (!showOverlay) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [showOverlay]);
 
   const handleDemoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,6 +75,8 @@ export default function DemoTool() {
     setReportContent("");
     setIsOffline(false);
     setAgents(INITIAL_AGENTS);
+    setEmailSent(false);
+    setEmailError(null);
 
     try {
       const response = await fetch("/api/demo", {
