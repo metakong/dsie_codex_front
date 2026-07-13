@@ -23,7 +23,7 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://thedsiecodex.online"),
+  metadataBase: new URL("https://thedsiecodex.com"),
   title: "The DSIE Codex LLC",
   description: "Fractional AI integration consultancy. We build, secure, and operate custom AI systems for small businesses.",
   manifest: "/manifest.json",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "The DSIE Codex LLC",
     description: "Fractional AI integration consultancy. We build, secure, and operate custom AI systems for small businesses.",
-    url: "https://thedsiecodex.online",
+    url: "https://thedsiecodex.com",
     siteName: "The DSIE Codex",
     images: [
       {

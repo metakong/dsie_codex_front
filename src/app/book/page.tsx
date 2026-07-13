@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useRef, useEffect } from "react";
+import { submitIntake } from "@/app/actions";
 
 const TIERS = [
   { id: "flash",   label: "Flash Session — $347" },
@@ -9,38 +10,14 @@ const TIERS = [
 ] as const;
 
 export default function Book() {
-  const [selectedTier, setSelectedTier] = useState<typeof TIERS[number]["id"]>("unsure");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
+  const [state, formAction, isPending] = useActionState(submitIntake, null);
 
-  const handleIntakeSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitMessage("");
-
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-
-    try {
-      const response = await fetch("/api/intake", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, selectedTier }),
-      });
-      const resData = await response.json();
-      if (response.ok) {
-        setSubmitMessage("Intake received. Supabase integration added in next session.");
-        e.currentTarget.reset();
-      } else {
-        setSubmitMessage(resData.message || "Something went wrong.");
-      }
-    } catch (err) {
-      console.error(err);
-      setSubmitMessage("Failed to submit. Please try again.");
-    } finally {
-      setIsSubmitting(false);
+  useEffect(() => {
+    if (state?.success) {
+      formRef.current?.reset();
     }
-  };
+  }, [state]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -72,18 +49,22 @@ export default function Book() {
           {/* Tier pills */}
           <div className="flex flex-wrap gap-3 mb-8">
             {TIERS.map((tier) => (
-              <button
+              <label
                 key={tier.id}
-                type="button"
-                onClick={() => setSelectedTier(tier.id)}
-                className={`border text-xs font-mono px-4 py-2 transition-all duration-200 rounded-sm cursor-pointer ${
-                  selectedTier === tier.id
-                    ? "border-gold text-gold bg-gold/10"
-                    : "border-border text-cream/60 hover:border-gold hover:text-gold"
-                }`}
+                className="cursor-pointer"
               >
-                {tier.label}
-              </button>
+                <input
+                  type="radio"
+                  name="selectedTier"
+                  value={tier.id}
+                  form="intake-form"
+                  defaultChecked={tier.id === "unsure"}
+                  className="sr-only peer"
+                />
+                <span className="border text-xs font-mono px-4 py-2 transition-all duration-200 rounded-sm inline-block peer-checked:border-gold peer-checked:text-gold peer-checked:bg-gold/10 border-border text-cream/60 hover:border-gold hover:text-gold">
+                  {tier.label}
+                </span>
+              </label>
             ))}
           </div>
 
@@ -111,7 +92,7 @@ export default function Book() {
             No spam. No nurture sequences.
           </p>
 
-          <form onSubmit={handleIntakeSubmit} className="flex flex-col">
+          <form id="intake-form" ref={formRef} action={formAction} className="flex flex-col">
             <label htmlFor="businessName" className="sr-only">Business name</label>
             <input
               type="text"
@@ -211,15 +192,17 @@ export default function Book() {
 
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isPending}
               className="w-full bg-gold text-background font-sans font-semibold py-3 hover:bg-goldLight disabled:opacity-50 transition-colors duration-200"
             >
-              {isSubmitting ? "Submitting..." : "Submit Intake"}
+              {isPending ? "Submitting..." : "Submit Intake"}
             </button>
 
-            {submitMessage && (
-              <p className="mt-4 font-mono text-xs text-terminal tracking-wide">
-                // {submitMessage}
+            {state?.message && (
+              <p className={`mt-4 font-mono text-xs tracking-wide ${
+                state.success ? "text-terminal" : "text-gold"
+              }`}>
+                // {state.message}
               </p>
             )}
 

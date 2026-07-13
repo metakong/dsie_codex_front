@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://thedsiecodex.online/sitemap.xml",
+    sitemap: "https://thedsiecodex.com/sitemap.xml",
   };
 }

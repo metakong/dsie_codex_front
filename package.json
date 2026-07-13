@@ -1,10 +1,11 @@
 {
-  "name": "tmp-next-app",
+  "name": "dsie-codex-front",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:cf": "npm install -D @opennextjs/cloudflare wrangler && npx opennextjs-cloudflare build",
     "start": "next start",
     "lint": "eslint"
   },
@@ -16,7 +17,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^25.9.3",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
