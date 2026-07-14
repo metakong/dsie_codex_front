@@ -44,14 +44,32 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             // Tighten/expand per embed needs in Phase 4.
             // Any 'unsafe-*' addition must be justified in SECURITY_POLICY.md before merge.
+            //
+            // script-src REQUIRES 'unsafe-inline': the Next.js App Router hydrates
+            // statically prerendered pages via inline <script>self.__next_f.push(...)</script>
+            // tags. With bare script-src 'self', the browser blocks those scripts, React
+            // never hydrates, and every client interaction (mobile menu, demo tool, forms)
+            // silently dies in production. A nonce-based CSP is the stricter alternative,
+            // but nonces require per-request dynamic rendering of every page, which defeats
+            // static prerendering on Cloudflare Workers. 'self' still blocks all cross-origin
+            // script loads; the residual risk (inline script injection) requires an XSS hole
+            // in a site that renders no user-generated content.
+            //
+            // Google Fonts origins removed: next/font self-hosts all font files at build
+            // time, so nothing is ever fetched from fonts.googleapis.com / fonts.gstatic.com.
             value:
               "default-src 'self'; " +
               "frame-src 'self' https://cal.com https://*.cal.com; " +
-              "style-src 'self' https://fonts.googleapis.com; " +
-              "font-src 'self' https://fonts.gstatic.com; " +
-              "script-src 'self'; " +
+              "style-src 'self'; " +
+              "font-src 'self'; " +
+              "script-src 'self' 'unsafe-inline'; " +
               "img-src 'self' data: https:; " +
-              "connect-src 'self';",
+              "connect-src 'self'; " +
+              "object-src 'none'; " +
+              "base-uri 'self'; " +
+              "form-action 'self'; " +
+              "frame-ancestors 'self'; " +
+              "upgrade-insecure-requests;",
           },
         ],
       },

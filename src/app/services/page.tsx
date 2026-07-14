@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Services",
+  description:
+    "Transparent pricing for custom AI systems — built, secured, and operated for small businesses. No hidden pricing, no contact forms to learn a number.",
+};
 
 export default function Services() {
   return (

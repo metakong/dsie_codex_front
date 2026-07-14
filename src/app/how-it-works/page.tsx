@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "How It Works",
+  description:
+    "The DSIE Framework — Diagnose, Strategize, Integrate, Execute. Four phases, one accountable operator.",
+};
+
 export default function HowItWorks() {
   return (
     <div className="flex flex-col min-h-screen">

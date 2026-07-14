@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "28 years in sales, cybersecurity training, and hands-on AI engineering — the operator behind The DSIE Codex.",
+};
+
 export default function About() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-24 flex flex-col min-h-screen">

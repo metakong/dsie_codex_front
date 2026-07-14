@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bebas_Neue, Space_Grotesk, Space_Mono } from "next/font/google";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -22,9 +22,17 @@ const spaceMono = Space_Mono({
   variable: "--font-space-mono",
 });
 
+export const viewport: Viewport = {
+  themeColor: "#0A0A0A",
+  colorScheme: "dark",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://thedsiecodex.com"),
-  title: "The DSIE Codex LLC",
+  title: {
+    default: "The DSIE Codex LLC",
+    template: "%s — The DSIE Codex LLC",
+  },
   description: "Fractional AI integration consultancy. We build, secure, and operate custom AI systems for small businesses.",
   manifest: "/manifest.json",
   icons: {
