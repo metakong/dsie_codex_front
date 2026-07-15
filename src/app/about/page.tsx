@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { FOUNDER_LINKS } from "@/lib/founder";
 
 export const metadata: Metadata = {
   title: "About",
@@ -70,8 +71,43 @@ export default function About() {
             </span>
           </div>
           <p className="font-sans text-muted text-sm tracking-wide">
-            Launching September 2026 &middot; thedsiecodex.com
+            Launching September 1, 2026 &middot; thedsiecodex.com
           </p>
+        </section>
+
+        {/* Divider 3 */}
+        <hr className="border-border my-16" />
+
+        {/* FOUNDER FOOTPRINT */}
+        <section className="mb-16">
+          <div className="font-mono text-terminal text-xs mb-3 uppercase tracking-widest">
+            // VERIFY THE OPERATOR
+          </div>
+          <h2 className="font-display text-cream text-4xl md:text-5xl mb-8 tracking-wide uppercase">
+            THE PUBLIC RECORD
+          </h2>
+          <p className="font-sans text-cream/50 text-sm mb-8 leading-relaxed">
+            Don&apos;t take a website&apos;s word for it. The work, the writing,
+            and the track record are all public.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {FOUNDER_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group bg-surface border border-border hover:border-gold px-5 py-4 rounded-sm flex items-center justify-between transition-colors duration-200"
+              >
+                <span className="font-sans text-cream/80 group-hover:text-gold text-sm font-medium transition-colors">
+                  {link.label}
+                </span>
+                <span className="font-mono text-muted group-hover:text-gold text-xs transition-colors">
+                  &#8599;
+                </span>
+              </a>
+            ))}
+          </div>
         </section>
       </div>
     </div>

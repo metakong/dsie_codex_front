@@ -8,11 +8,13 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background pointer-events-none" />
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center w-full">
           <div className="font-mono text-terminal text-xs tracking-widest mb-6 uppercase">
-            // SYSTEM_STATUS: ONLINE &middot; AUTHENTICATION: SOVEREIGN
+            // LAUNCH: SEPTEMBER 1, 2026 &middot; SYSTEMS MIGRATION IN PROGRESS
           </div>
 
-          <h1 className="font-display text-cream leading-none mb-6 text-4xl md:text-7xl tracking-tight uppercase">
-            Stop paying for AI advice.
+          <h1 className="font-display text-cream leading-none mb-6 text-4xl md:text-6xl tracking-tight uppercase">
+            Stop paying for advice,
+            <br />
+            <span className="text-gold">start paying for action.</span>
           </h1>
 
           <p className="font-sans text-cream/70 text-base md:text-lg max-w-2xl mx-auto mb-6 leading-relaxed">
@@ -20,11 +22,25 @@ export default function Home() {
             We don&apos;t sell slide decks; we build working systems.
           </p>
 
-          <div className="font-sans text-xs md:text-sm font-bold text-gold mb-8 uppercase tracking-wider">
+          <div className="font-sans text-xs md:text-sm font-bold text-gold mb-6 uppercase tracking-wider">
             Identify your top automation opportunity right now. No email required.
           </div>
 
-          <DemoTool />
+          {/* Temporary migration notice — remove when the Jungle backend is live */}
+          <div
+            role="status"
+            className="max-w-2xl mx-auto mb-8 bg-surface border border-gold/50 border-l-4 border-l-gold px-5 py-4 rounded-sm text-left"
+          >
+            <div className="font-mono text-gold text-xs uppercase tracking-widest mb-1">
+              // TEMPORARY NOTICE
+            </div>
+            <p className="font-sans text-cream/80 text-sm leading-relaxed">
+              Business analyzer currently offline while we migrate architecture
+              and re-wire backend systems.
+            </p>
+          </div>
+
+          <DemoTool offline />
         </div>
       </section>
 

@@ -15,7 +15,12 @@ const INITIAL_AGENTS: AgentRow[] = [
   { name: "Agent 4 — Report Generator", status: "Pending" },
 ];
 
-export default function DemoTool() {
+interface DemoToolProps {
+  /** When true, the analyzer backend is unavailable — submission is disabled. */
+  offline?: boolean;
+}
+
+export default function DemoTool({ offline = false }: DemoToolProps) {
   const [businessType, setBusinessType] = useState("");
   const [painPoint, setPainPoint] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,6 +69,7 @@ export default function DemoTool() {
 
   const handleDemoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (offline) return;
     if (!businessType.trim() || !painPoint.trim()) return;
 
     abortRef.current?.abort();
@@ -225,10 +231,14 @@ export default function DemoTool() {
 
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-gold text-background font-sans font-semibold py-3 hover:bg-goldLight disabled:opacity-50 transition-colors duration-200 cursor-pointer"
+          disabled={offline || isSubmitting}
+          className="w-full bg-gold text-background font-sans font-semibold py-3 hover:bg-goldLight disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 cursor-pointer"
         >
-          {isSubmitting ? "Running Agents..." : "Analyze My Business →"}
+          {offline
+            ? "Analyzer Offline — Back at Launch"
+            : isSubmitting
+            ? "Running Agents..."
+            : "Analyze My Business →"}
         </button>
       </form>
 

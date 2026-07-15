@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
+  { href: "/what-is-dsie", label: "What is DSIE?" },
   { href: "/how-it-works", label: "How It Works" },
   { href: "/services", label: "Services" },
   { href: "/about", label: "About" },
@@ -13,6 +14,8 @@ const NAV_LINKS = [
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(`${href}/`);
 
   // Close the menu whenever navigation completes (covers back/forward too).
   // State is adjusted during render — React's recommended alternative to a
@@ -62,7 +65,7 @@ export default function Nav() {
                 key={href}
                 href={href}
                 className={`font-sans text-sm font-medium transition-colors ${
-                  pathname === href
+                  isActive(href)
                     ? "text-gold"
                     : "text-cream/80 hover:text-gold"
                 }`}
@@ -120,7 +123,7 @@ export default function Nav() {
               onClick={() => setIsOpen(false)}
               href={href}
               className={`font-sans text-2xl transition-colors ${
-                pathname === href ? "text-gold" : "text-cream/80 hover:text-gold"
+                isActive(href) ? "text-gold" : "text-cream/80 hover:text-gold"
               }`}
             >
               {label}
