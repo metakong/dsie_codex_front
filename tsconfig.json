@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -30,8 +30,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  // open-next.config.ts is consumed by the OpenNext CLI (which loads it itself, outside
-  // this tsconfig). Its "@opennextjs/cloudflare" import only exists in CI, where build:cf
-  // installs it — typechecking it locally fails "npm run build" on this machine.
-  "exclude": ["node_modules", "open-next.config.ts"]
+  "exclude": ["node_modules"]
 }
