@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, type ReactNode } from "react";
-import type { Interest } from "@/lib/plans";
+import { normalizeInterest, type Interest } from "@/lib/plans";
 
 type SelectedPlanState = {
   interest: Interest;
@@ -11,7 +11,16 @@ type SelectedPlanState = {
 const SelectedPlanContext = createContext<SelectedPlanState | null>(null);
 
 export function SelectedPlanProvider({ children }: { children: ReactNode }) {
-  const [interest, setInterest] = useState<Interest>("checkup");
+  const [interest, setInterest] = useState<Interest>(() => {
+    if (typeof window !== "undefined") {
+      const planParam = new URLSearchParams(window.location.search).get("plan");
+      if (planParam) {
+        return normalizeInterest(planParam);
+      }
+    }
+    return "checkup";
+  });
+
   return (
     <SelectedPlanContext.Provider value={{ interest, setInterest }}>
       {children}

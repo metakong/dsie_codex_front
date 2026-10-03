@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import {
-  INTEREST_OPTIONS,
+  DROPDOWN_GROUPS,
   INTEREST_VALUES,
   formatUSD,
   recommendPlan,
@@ -16,7 +16,7 @@ import { useSelectedPlan } from "./SelectedPlanContext";
  */
 const HOURLY_COST = 35; // Blended Springfield-area labor cost per hour (owner, office, or tech)
 const WEEKS_PER_MONTH = 4.33;
-const HOURS_PER_APP_PER_WEEK = 3; // Copying info between each app that doesn't sync, plus fixing the mistakes
+const HOURS_PER_APP_PER_WEEK = 3; // Copying info between each app that doesn't sync, plus fixing mistakes
 const TECH_HOURS_PER_WORKER_PER_WEEK = 0.5; // Frozen tablets, logins, Wi-Fi, printers
 
 const CREW_MIN = 2;
@@ -242,7 +242,14 @@ export default function Checkup() {
               </p>
               <a
                 href="#get-started"
-                onClick={() => setInterest(suggested.id)}
+                onClick={() => {
+                  setInterest(suggested.id);
+                  if (typeof window !== "undefined") {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set("plan", suggested.id);
+                    window.history.replaceState(null, "", url.toString());
+                  }
+                }}
                 className="mt-4 block text-center border border-emerald-500/40 text-emerald-400 font-mono text-xs uppercase tracking-wider py-2.5 hover:bg-emerald-500 hover:text-zinc-950 transition-colors"
               >
                 Choose {suggested.shortName}
@@ -307,14 +314,33 @@ export default function Checkup() {
                     value={interest}
                     onChange={(e) => {
                       const value = e.target.value as Interest;
-                      if ((INTEREST_VALUES as readonly string[]).includes(value)) setInterest(value);
+                      if ((INTEREST_VALUES as readonly string[]).includes(value)) {
+                        setInterest(value);
+                        if (typeof window !== "undefined") {
+                          const url = new URL(window.location.href);
+                          url.searchParams.set("plan", value);
+                          window.history.replaceState(null, "", url.toString());
+                        }
+                      }
                     }}
                     className={`${inputClass} cursor-pointer [color-scheme:dark]`}
                   >
-                    {INTEREST_OPTIONS.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
+                    {DROPDOWN_GROUPS.map((group) => (
+                      <optgroup
+                        key={group.label}
+                        label={group.label}
+                        className="bg-zinc-900 text-zinc-300 font-semibold"
+                      >
+                        {group.options.map((option) => (
+                          <option
+                            key={option.value}
+                            value={option.value}
+                            className="bg-zinc-950 text-zinc-100 font-normal"
+                          >
+                            {option.label}
+                          </option>
+                        ))}
+                      </optgroup>
                     ))}
                   </select>
                 </div>

@@ -1,10 +1,10 @@
-import { PLANS, formatUSD } from "@/lib/plans";
+import { TECHOPS_PLANS, formatUSD } from "@/lib/plans";
 
 const TRADES = ["HVAC", "Plumbing", "Electrical", "Roofing", "Commercial Contractors"];
 
-const startingPrice = Math.min(...PLANS.map((p) => p.price));
-const minHours = Math.min(...PLANS.map((p) => p.hours));
-const maxHours = Math.max(...PLANS.map((p) => p.hours));
+const startingPrice = Math.min(...TECHOPS_PLANS.map((p) => p.price));
+const minHours = Math.min(...TECHOPS_PLANS.map((p) => p.hours));
+const maxHours = Math.max(...TECHOPS_PLANS.map((p) => p.hours));
 
 const PROOF_POINTS = [
   { value: formatUSD(startingPrice), label: "Plans start at, per month" },

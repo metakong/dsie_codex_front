@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { PLANS, formatUSD, type PillarKey } from "@/lib/plans";
+import { WHOLE_HOUSE_BUNDLE, formatUSD, type PillarKey } from "@/lib/plans";
 
 const ICON_PROPS = {
   width: 22,
@@ -91,7 +91,7 @@ const PILLARS: {
   },
 ];
 
-const topPlan = PLANS[PLANS.length - 1];
+const bundleAnnual = WHOLE_HOUSE_BUNDLE.price * 12;
 
 export default function Pillars() {
   return (
@@ -103,11 +103,12 @@ export default function Pillars() {
             What We Handle
           </span>
           <h2 className="text-2xl sm:text-3xl font-bold text-zinc-100 mt-1">
-            One Back Office. Three Jobs Done Right.
+            One Back Office. Three Standalone Pillars.
           </h2>
           <p className="mt-3 text-sm sm:text-base text-zinc-400 leading-relaxed">
-            Your plan hours work across all three. Whatever is slowing the crew down this month,
-            whether that&apos;s tablets, leads, or billing, gets fixed first.
+            Subscribe to a standalone service pillar or bundle all three. Whether your crew needs
+            reliable field tablets, a locked-down sales pipeline, or automated job billing, we take
+            it off your plate.
           </p>
         </div>
 
@@ -158,9 +159,9 @@ export default function Pillars() {
           </span>
           <p className="text-sm text-zinc-300 leading-relaxed">
             An entry-level IT hire runs about <strong className="text-zinc-100">$60,000 a year</strong>{" "}
-            before benefits. Our biggest plan is{" "}
-            <strong className="text-emerald-400">{formatUSD(topPlan.price * 12)} a year</strong>, and it
-            covers your leads and billing too.
+            before benefits. Our Whole House Bundle is{" "}
+            <strong className="text-emerald-400">{formatUSD(WHOLE_HOUSE_BUNDLE.price)} a month</strong>{" "}
+            ({formatUSD(bundleAnnual)}/yr), and it gives you 75 hours across tech, sales, and billing.
           </p>
         </div>
       </div>
