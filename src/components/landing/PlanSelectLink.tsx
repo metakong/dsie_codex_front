@@ -1,28 +1,33 @@
 "use client";
 
 import type { ReactNode } from "react";
-import type { Interest } from "@/lib/plans";
 import { useSelectedPlan } from "./SelectedPlanContext";
 
-/** Anchor that pre-selects a plan in the intake form, syncs URL query, then scrolls to #get-started. */
+/** Anchor that pre-selects modules/presets, then scrolls to #get-started. */
 export default function PlanSelectLink({
-  interest,
+  presetId,
+  modules,
   className,
   children,
 }: {
-  interest: Interest;
+  presetId?: string;
+  modules?: string[];
   className?: string;
   children: ReactNode;
 }) {
-  const { setInterest } = useSelectedPlan();
+  const { applyPreset, setSelectedModules } = useSelectedPlan();
 
   const handleClick = () => {
-    setInterest(interest);
+    if (presetId) {
+      applyPreset(presetId);
+    } else if (modules && modules.length > 0) {
+      setSelectedModules(modules);
+    }
     if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.set("plan", interest);
-      url.hash = "get-started";
-      window.history.replaceState(null, "", url.toString());
+      const el = document.getElementById("get-started");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 

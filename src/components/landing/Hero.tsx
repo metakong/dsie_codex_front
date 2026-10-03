@@ -1,14 +1,10 @@
-import { TECHOPS_PLANS, formatUSD } from "@/lib/plans";
+import { BASE_RETAINER_MODULE, formatUSD } from "@/lib/plans";
 
 const TRADES = ["HVAC", "Plumbing", "Electrical", "Roofing", "Commercial Contractors"];
 
-const startingPrice = Math.min(...TECHOPS_PLANS.map((p) => p.price));
-const minHours = Math.min(...TECHOPS_PLANS.map((p) => p.hours));
-const maxHours = Math.max(...TECHOPS_PLANS.map((p) => p.hours));
-
 const PROOF_POINTS = [
-  { value: formatUSD(startingPrice), label: "Plans start at, per month" },
-  { value: `${minHours}\u2013${maxHours} hrs`, label: "Of hands-on help, every month" },
+  { value: formatUSD(BASE_RETAINER_MODULE.price), label: "Base Retainer starts at / mo" },
+  { value: "A'La Carte", label: "Modular Tech, Sales & Billing" },
   { value: "0", label: "Long-term contracts" },
 ];
 
@@ -28,7 +24,7 @@ export default function Hero() {
             <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
           </span>
           <span className="font-mono text-[11px] sm:text-xs uppercase tracking-widest text-emerald-400">
-            Springfield, MO &middot; Back Office for the Trades
+            Springfield, MO &middot; Modular Back Office for the Trades
           </span>
         </div>
 
@@ -36,13 +32,11 @@ export default function Hero() {
           Stop Paying Your Top Tradesmen to Fix the Wi-Fi.
         </h1>
         <p className="mt-4 text-xl sm:text-2xl font-semibold text-emerald-400 max-w-3xl leading-snug">
-          Let The DSIE Codex handle your tech, your leads, and your billing.
+          Build your custom back office with modular Tech, Sales, and Billing add-ons.
         </p>
 
         <p className="mt-6 text-base sm:text-lg text-zinc-400 max-w-2xl leading-relaxed">
-          We&apos;re the back office you never had time to hire. One flat monthly plan covers the
-          tablets in your trucks, the leads hitting your phone, and the invoices going out the
-          door, for less than an entry-level IT guy.
+          We&apos;re the modular back office built for Springfield trade shops. Start with a $99/mo Base Access retainer, then pick only the tech, lead, and invoicing modules your crew needs.
         </p>
 
         <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -50,7 +44,7 @@ export default function Hero() {
             href="#plans"
             className="text-center bg-emerald-500 text-zinc-950 font-mono text-xs font-semibold uppercase tracking-wider px-6 py-4 sm:py-3.5 hover:bg-emerald-400 transition-colors"
           >
-            See Plans &amp; Pricing
+            Build Your Custom Plan &rarr;
           </a>
           <a
             href="#checkup"

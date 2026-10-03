@@ -1,500 +1,301 @@
 /**
- * Single source of truth for the 3x3 Subscription Matrix + Whole House Bundle.
- * TechOps, SalesOps, RevOps (each with Starter, Growth, Full Fractional tiers)
- * plus the Whole House Bundle ($1,125/mo for all three top tiers).
+ * Single source of truth for The DSIE Codex LLC modular pricing architecture.
+ * Interactive "Build-Your-Own Back Office" modular pricing structure.
  */
 
-export type PillarKey = "tech" | "sales" | "rev";
+export type ModuleCategory = "base" | "tech" | "sales" | "rev";
 
-export const PILLAR_INFO: Record<
-  PillarKey,
-  {
-    name: string;
-    nickname: string;
-    tabLabel: string;
-    valueProp: string;
-    tagline: string;
-  }
-> = {
-  tech: {
-    name: "TechOps",
-    nickname: "The Toolkit",
-    tabLabel: "TechOps (The Toolkit)",
-    valueProp:
-      "Keep the crew working and your software running without paying $60k a year for an IT guy.",
-    tagline: "Field tablets, metal shop Wi-Fi, email spam defense, and instant lockouts.",
-  },
-  sales: {
-    name: "SalesOps",
-    nickname: "The Front Door",
-    tabLabel: "SalesOps (The Front Door)",
-    valueProp:
-      "Catch every lead, send quotes faster from the driveway, and chase down approvals automatically.",
-    tagline: "Driveway quoting, instant lead-to-SMS routing, and automated estimate follow-ups.",
-  },
-  rev: {
-    name: "RevOps",
-    nickname: "The Vault",
-    tabLabel: "RevOps (The Vault)",
-    valueProp:
-      "Bridge the field to the office, collect the cash, and defend your profit margin.",
-    tagline: "Timecard-to-payroll flow, automatic billing, QuickBooks sync, and job costing.",
-  },
-};
-
-export const TECH_PLAN_IDS = [
-  "tech-keep-it-running",
-  "tech-field-to-office",
-  "tech-outsourced-it",
-] as const;
-
-export const SALES_PLAN_IDS = [
-  "sales-lead-capture",
-  "sales-pipeline-builder",
-  "sales-machine",
-] as const;
-
-export const REV_PLAN_IDS = [
-  "rev-leak-plugger",
-  "rev-the-bridge",
-  "rev-open-book-ops",
-] as const;
-
-export const BUNDLE_ID = "whole-house-bundle" as const;
-
-export const STANDALONE_PLAN_IDS = [
-  ...TECH_PLAN_IDS,
-  ...SALES_PLAN_IDS,
-  ...REV_PLAN_IDS,
-] as const;
-
-export const PLAN_IDS = [...STANDALONE_PLAN_IDS, BUNDLE_ID] as const;
-export type PlanId = (typeof PLAN_IDS)[number];
-
-export const INTEREST_VALUES = [...PLAN_IDS, "checkup"] as const;
-export type Interest = (typeof INTEREST_VALUES)[number];
-
-export interface PlanFeature {
+export interface PricingModule {
+  id: string;
   title: string;
-  detail: string;
-}
-
-export interface Plan {
-  id: PlanId;
-  pillar?: PillarKey;
-  tierNumber: string;
-  tierLabel: string;
-  name: string;
-  shortName: string;
   price: number;
-  hours: number;
-  bestFor: string;
-  crewRange: string;
-  maxCrew: number;
-  featured?: boolean;
-  includesPrevious?: string;
-  cta: string;
-  features: PlanFeature[];
+  category: ModuleCategory;
+  categoryLabel: string;
+  shortDescription: string;
+  fullDescription: string;
+  isMandatory?: boolean;
+  badge?: string;
 }
 
-export const TECHOPS_PLANS: Plan[] = [
-  {
-    id: "tech-keep-it-running",
-    pillar: "tech",
-    tierNumber: "01",
-    tierLabel: "Starter",
-    name: "The \u201CKeep It Running\u201D Plan",
-    shortName: "Keep It Running",
-    price: 195,
-    hours: 5,
-    bestFor: "Owner-operators",
-    crewRange: "2\u20135 workers",
-    maxCrew: 5,
-    cta: "Start With Keep It Running",
-    features: [
-      {
-        title: "Fixing email spam issues",
-        detail: "Stop estimates and invoices from landing in customer junk folders.",
-      },
-      {
-        title: "New hire setup & lockout",
-        detail: "Fast email and login setup for new hires; instant revocation upon exit.",
-      },
-      {
-        title: "Remote tablet & printer troubleshooting",
-        detail: "Frozen tablet or jammed office printer? Call us. We fix it over the phone.",
-      },
-    ],
-  },
-  {
-    id: "tech-field-to-office",
-    pillar: "tech",
-    tierNumber: "02",
-    tierLabel: "Growth",
-    name: "The \u201CField to Office\u201D Plan",
-    shortName: "Field to Office",
-    price: 299,
-    hours: 12,
-    bestFor: "Growing crews",
-    crewRange: "5\u201315 workers",
-    maxCrew: 15,
-    featured: true,
-    includesPrevious: "Everything in Keep It Running, plus:",
-    cta: "Deploy Field to Office",
-    features: [
-      {
-        title: "Mobile device lockdown",
-        detail: "Lock work phones and tablets down to work apps and block unauthorized downloads.",
-      },
-      {
-        title: "Timeclock app syncing maintenance",
-        detail: "Ensure field punch times sync reliably so crew hours are never lost or corrupted.",
-      },
-      {
-        title: "Lost device remote wipe",
-        detail: "Instantly wipe company data and customer info if a tablet goes missing in the field.",
-      },
-    ],
-  },
-  {
-    id: "tech-outsourced-it",
-    pillar: "tech",
-    tierNumber: "03",
-    tierLabel: "Full Fractional",
-    name: "The \u201COutsourced IT\u201D Plan",
-    shortName: "Outsourced IT",
-    price: 375,
-    hours: 25,
-    bestFor: "Established fleets",
-    crewRange: "15\u201335 workers",
-    maxCrew: 35,
-    includesPrevious: "Everything in Field to Office, plus:",
-    cta: "Retain Outsourced IT",
-    features: [
-      {
-        title: "Fixing metal shop Wi-Fi dead zones",
-        detail: "Commercial-grade signal that actually reaches the back of the metal building and yard.",
-      },
-      {
-        title: "Automated daily backups",
-        detail: "Job photos, bids, and contracts backed up automatically every single night.",
-      },
-      {
-        title: "Priority on-site dispatch in Springfield",
-        detail: "When remote fixes won\u2019t cut it, priority in-person dispatch to your shop or yard.",
-      },
-    ],
-  },
-];
-
-export const SALESOPS_PLANS: Plan[] = [
-  {
-    id: "sales-lead-capture",
-    pillar: "sales",
-    tierNumber: "01",
-    tierLabel: "Starter",
-    name: "The \u201CLead Capture\u201D Plan",
-    shortName: "Lead Capture",
-    price: 195,
-    hours: 5,
-    bestFor: "Owner-operators",
-    crewRange: "2\u20135 workers",
-    maxCrew: 5,
-    cta: "Start With Lead Capture",
-    features: [
-      {
-        title: "Unified lead routing to your phone",
-        detail: "Website forms, quote requests, and Facebook messages texted straight to dispatch phones.",
-      },
-      {
-        title: "Standardized mobile quote templates",
-        detail: "Send clean, professional quotes right from the driveway before leaving the customer\u2019s house.",
-      },
-      {
-        title: "Instant lead notifications",
-        detail: "Never let a hot quote request sit in an unchecked email inbox for days.",
-      },
-    ],
-  },
-  {
-    id: "sales-pipeline-builder",
-    pillar: "sales",
-    tierNumber: "02",
-    tierLabel: "Growth",
-    name: "The \u201CPipeline Builder\u201D Plan",
-    shortName: "Pipeline Builder",
-    price: 299,
-    hours: 12,
-    bestFor: "Growing crews",
-    crewRange: "5\u201315 workers",
-    maxCrew: 15,
-    featured: true,
-    includesPrevious: "Everything in Lead Capture, plus:",
-    cta: "Deploy Pipeline Builder",
-    features: [
-      {
-        title: "Automated \u201Cno-touch\u201D estimate follow-ups",
-        detail: "Polite automated text and email nudges sent on schedule until the customer approves or declines.",
-      },
-      {
-        title: "Field canvassing app setups",
-        detail: "Mobile lead tracking and territory mapping configured for your door-to-door or storm crews.",
-      },
-      {
-        title: "Quote win/loss dashboard",
-        detail: "Clear weekly report showing which services are closing and which bids went cold.",
-      },
-    ],
-  },
-  {
-    id: "sales-machine",
-    pillar: "sales",
-    tierNumber: "03",
-    tierLabel: "Full Fractional",
-    name: "The \u201CSales Machine\u201D Plan",
-    shortName: "The Sales Machine",
-    price: 375,
-    hours: 25,
-    bestFor: "Established fleets",
-    crewRange: "15\u201335 workers",
-    maxCrew: 35,
-    includesPrevious: "Everything in Pipeline Builder, plus:",
-    cta: "Retain Sales Machine",
-    features: [
-      {
-        title: "Live sales scoreboards on office TVs",
-        detail: "Real-time leaderboard showing weekly revenue, quotes sent, and closing rates on your shop TV.",
-      },
-      {
-        title: "Automated lead qualification text-bots",
-        detail: "Pre-screen incoming requests for budget and urgency via text before you roll a truck.",
-      },
-      {
-        title: "Storm & seasonal outreach sequences",
-        detail: "Automated past-customer re-activation campaigns for seasonal maintenance or storm bids.",
-      },
-    ],
-  },
-];
-
-export const REVOPS_PLANS: Plan[] = [
-  {
-    id: "rev-leak-plugger",
-    pillar: "rev",
-    tierNumber: "01",
-    tierLabel: "Starter",
-    name: "The \u201CLeak Plugger\u201D Plan",
-    shortName: "Leak Plugger",
-    price: 195,
-    hours: 5,
-    bestFor: "Owner-operators",
-    crewRange: "2\u20135 workers",
-    maxCrew: 5,
-    cta: "Start With Leak Plugger",
-    features: [
-      {
-        title: "Automated instant invoicing",
-        detail: "Invoices generate and send automatically the minute a job is marked completed in the field.",
-      },
-      {
-        title: "Polite unpaid invoice reminders",
-        detail: "Friendly automated text and email nudges for overdue balances so you don\u2019t have to chase checks.",
-      },
-      {
-        title: "Card payment link on every invoice",
-        detail: "Give customers a 1-click text link to pay immediately via debit, credit, or bank transfer.",
-      },
-    ],
-  },
-  {
-    id: "rev-the-bridge",
-    pillar: "rev",
-    tierNumber: "02",
-    tierLabel: "Growth",
-    name: "The \u201CBridge\u201D Plan",
-    shortName: "The Bridge",
-    price: 299,
-    hours: 12,
-    bestFor: "Growing crews",
-    crewRange: "5\u201315 workers",
-    maxCrew: 15,
-    featured: true,
-    includesPrevious: "Everything in Leak Plugger, plus:",
-    cta: "Deploy The Bridge",
-    features: [
-      {
-        title: "Field-app-to-QuickBooks data bridges",
-        detail: "Crew hours, parts, and line items flow straight into QuickBooks with zero double-entry.",
-      },
-      {
-        title: "Automated 5-star Google review requests",
-        detail: "Review links texted to happy customers automatically the exact moment an invoice is settled.",
-      },
-      {
-        title: "Daily cash-in reconciliation",
-        detail: "Automatic matching between payment processor deposits and your operating bank account.",
-      },
-    ],
-  },
-  {
-    id: "rev-open-book-ops",
-    pillar: "rev",
-    tierNumber: "03",
-    tierLabel: "Full Fractional",
-    name: "The \u201COpen-Book Ops\u201D Plan",
-    shortName: "Open-Book Ops",
-    price: 375,
-    hours: 25,
-    bestFor: "Established fleets",
-    crewRange: "15\u201335 workers",
-    maxCrew: 35,
-    includesPrevious: "Everything in The Bridge, plus:",
-    cta: "Retain Open-Book Ops",
-    features: [
-      {
-        title: "Job costing audits (estimated vs. actuals)",
-        detail: "Find out exactly which jobs made healthy gross margin and which ones quietly lost money.",
-      },
-      {
-        title: "Open-book profit scoreboards for weekly huddles",
-        detail: "Automated weekly scoreboard displays showing team labor efficiency and bonus targets.",
-      },
-      {
-        title: "Automated complaint & warranty escalation",
-        detail: "Job issues and callbacks route instantly to the owner or lead tech before reviews get hurt.",
-      },
-    ],
-  },
-];
-
-export const WHOLE_HOUSE_BUNDLE: Plan = {
-  id: "whole-house-bundle",
-  tierNumber: "★",
-  tierLabel: "All-In-One",
-  name: "The Whole House Bundle",
-  shortName: "Whole House Bundle",
-  price: 1125,
-  hours: 75,
-  bestFor: "Growing & established fleets",
-  crewRange: "10\u201335+ workers",
-  maxCrew: Infinity,
-  featured: true,
-  cta: "Claim Whole House Bundle",
-  features: [
-    {
-      title: "All 3 Full Fractional Subscriptions",
-      detail: "Full Tier 3 TechOps (25 hrs) + Tier 3 SalesOps (25 hrs) + Tier 3 RevOps (25 hrs) — 75 total hours/mo.",
-    },
-    {
-      title: "Priority Springfield On-Site Dispatch & Wi-Fi",
-      detail: "Emergency hardware troubleshooting at your shop, metal building Wi-Fi fixes, and daily photo backups.",
-    },
-    {
-      title: "Driveway Quoting, SMS Bots & TV Scoreboards",
-      detail: "Unified lead routing, automated follow-up texts, quote qualification bots, and live sales leaderboards.",
-    },
-    {
-      title: "Full QuickBooks Sync, Job Costing & Review Boost",
-      detail: "Automated invoicing, zero double-entry timecards, weekly open-book huddle boards, and review generation.",
-    },
-  ],
+export const BASE_RETAINER_MODULE: PricingModule = {
+  id: "base-retainer",
+  title: "Base Access Retainer",
+  price: 99,
+  category: "base",
+  categoryLabel: "Foundation (Mandatory)",
+  shortDescription: "Guaranteed roster spot, 2 hours of remote break-fix triage, and direct ticketing access.",
+  fullDescription: "Guaranteed roster spot, 2 hours of remote break-fix triage, and direct access to our ticketing system.",
+  isMandatory: true,
+  badge: "Required Foundation",
 };
 
-export const PLANS_BY_PILLAR: Record<PillarKey, Plan[]> = {
-  tech: TECHOPS_PLANS,
-  sales: SALESOPS_PLANS,
-  rev: REVOPS_PLANS,
-};
-
-export const ALL_PLANS: Plan[] = [
-  ...TECHOPS_PLANS,
-  ...SALESOPS_PLANS,
-  ...REVOPS_PLANS,
-  WHOLE_HOUSE_BUNDLE,
+export const TECHOPS_MODULES: PricingModule[] = [
+  {
+    id: "inbox-defender",
+    title: "The In-Box Defender",
+    price: 49,
+    category: "tech",
+    categoryLabel: "TechOps",
+    shortDescription: "Guaranteed email delivery (no spam folders) and instant password resets.",
+    fullDescription: "Guaranteed email delivery so your bids never hit customer spam folders, plus instant password resets.",
+  },
+  {
+    id: "fleet-tablet-lockdown",
+    title: "Fleet Tablet Lockdown",
+    price: 79,
+    category: "tech",
+    categoryLabel: "TechOps",
+    shortDescription: "Field devices locked to work apps. Remote wipe & automated app updates.",
+    fullDescription: "Field devices are locked to work apps only. We remotely wipe lost devices and push app updates automatically.",
+    badge: "Popular for Fleets",
+  },
+  {
+    id: "one-click-onboarding",
+    title: "1-Click Onboarding",
+    price: 89,
+    category: "tech",
+    categoryLabel: "TechOps",
+    shortDescription: "Instantly create software accounts & send welcome guides for new hires.",
+    fullDescription: "When you hire someone, we instantly create all their software accounts and send them a welcome guide.",
+  },
+  {
+    id: "shop-network-shield",
+    title: "Shop Network Shield",
+    price: 99,
+    category: "tech",
+    categoryLabel: "TechOps",
+    shortDescription: "Fast, secure Wi-Fi reaching the whole yard with guest network isolation.",
+    fullDescription: "Fast, secure Wi-Fi that reaches the whole yard, with secure guest networks for visitors.",
+  },
+  {
+    id: "onsite-dispatch-pass",
+    title: "On-Site Dispatch Pass",
+    price: 125,
+    category: "tech",
+    categoryLabel: "TechOps",
+    shortDescription: "4 hours of dedicated, in-person physical troubleshooting in Springfield.",
+    fullDescription: "Adds 4 hours of dedicated, in-person physical troubleshooting at your Springfield location.",
+  },
+  {
+    id: "server-backup-guardian",
+    title: "Server & Backup Guardian",
+    price: 149,
+    category: "tech",
+    categoryLabel: "TechOps",
+    shortDescription: "Office server maintenance & nightly off-site vault backups.",
+    fullDescription: "We keep your old office server running and back up all your data to a secure off-site vault every night.",
+  },
 ];
 
-/** Options for the intake form dropdown with optgroups. */
-export interface DropdownGroup {
-  label: string;
-  options: { value: Interest; label: string }[];
+export const SALESOPS_MODULES: PricingModule[] = [
+  {
+    id: "lead-router",
+    title: "Instant Lead Router",
+    price: 69,
+    category: "sales",
+    categoryLabel: "SalesOps",
+    shortDescription: "Website forms, Google clicks, and Facebook messages are instantly texted to your phone.",
+    fullDescription: "Website forms, Google clicks, and Facebook messages are instantly texted to your phone.",
+    badge: "Fastest Lead Response",
+  },
+  {
+    id: "estimate-chaser",
+    title: "The Estimate Chaser",
+    price: 149,
+    category: "sales",
+    categoryLabel: "SalesOps",
+    shortDescription: "Unsigned quotes get automatic, polite text and email follow-ups at 2 days and 7 days.",
+    fullDescription: "Unsigned quotes get automatic, polite text and email follow-ups at 2 days and 7 days.",
+    badge: "High Conversion",
+  },
+  {
+    id: "door-tracker",
+    title: "Door-to-Door Tracker",
+    price: 199,
+    category: "sales",
+    categoryLabel: "SalesOps",
+    shortDescription: "A simple mobile app for storm-chasers & canvassers to drop pins and log leads offline.",
+    fullDescription: "A simple mobile app for your storm-chasers and canvassers to drop pins, track door knocks, and log leads, even without cell service.",
+  },
+  {
+    id: "commercial-hitlists",
+    title: "Commercial Hitlists",
+    price: 249,
+    category: "sales",
+    categoryLabel: "SalesOps",
+    shortDescription: "Monthly fresh list of local property managers & facility directors for commercial sales.",
+    fullDescription: "Every month, we hand you a fresh, accurate list of local property managers and facility directors to feed your commercial sales.",
+    badge: "B2B Growth",
+  },
+  {
+    id: "sales-scoreboard",
+    title: "The Sales Scoreboard",
+    price: 99,
+    category: "sales",
+    categoryLabel: "SalesOps",
+    shortDescription: "Live TV dashboard in your office showing estimator closing rates & lead ROI.",
+    fullDescription: "A live TV dashboard in your office showing exactly which estimators are closing deals and which lead sources actually make you money.",
+  },
+];
+
+export const REVOPS_MODULES: PricingModule[] = [
+  {
+    id: "app-to-accounting",
+    title: "App-to-Accounting Bridge",
+    price: 149,
+    category: "rev",
+    categoryLabel: "RevOps",
+    shortDescription: "When a job is marked Done in the field, an invoice automatically generates in QuickBooks.",
+    fullDescription: "The moment a job is marked \"Done\" in the field, an invoice automatically generates in QuickBooks. No more double-entry.",
+    badge: "No Double Entry",
+  },
+  {
+    id: "debt-collector",
+    title: "The Polite Debt Collector",
+    price: 99,
+    category: "rev",
+    categoryLabel: "RevOps",
+    shortDescription: "Automated, friendly text & email reminders sent at 3, 15, and 30 days past due.",
+    fullDescription: "Automated, friendly text and email reminders sent to customers with unpaid invoices at 3, 15, and 30 days past due.",
+    badge: "Collections",
+  },
+  {
+    id: "5-star-machine",
+    title: "The 5-Star Machine",
+    price: 79,
+    category: "rev",
+    categoryLabel: "RevOps",
+    shortDescription: "Automatically texts a Google Review link the second a final invoice is paid.",
+    fullDescription: "Automatically texts a happy customer a direct link to leave a Google Review the second their final invoice is paid.",
+    badge: "Reputation Boost",
+  },
+  {
+    id: "job-profit-xray",
+    title: "Job Profit X-Ray",
+    price: 199,
+    category: "rev",
+    categoryLabel: "RevOps",
+    shortDescription: "Track estimated vs. actual labor & materials to see where you bled cash.",
+    fullDescription: "We track your estimated labor and materials against what was actually spent, showing you exactly where you bled cash on a job.",
+    badge: "Margin Defense",
+  },
+  {
+    id: "escalation-firewall",
+    title: "The \"Angry Customer\" Firewall",
+    price: 129,
+    category: "rev",
+    categoryLabel: "RevOps",
+    shortDescription: "Structured system for warranty claims and angry calls without blowing up your cell phone.",
+    fullDescription: "A structured system for handling warranty claims and angry calls so they get resolved quickly without blowing up your personal cell phone.",
+    badge: "Owner Protection",
+  },
+];
+
+export const ADDON_MODULES: PricingModule[] = [
+  ...TECHOPS_MODULES,
+  ...SALESOPS_MODULES,
+  ...REVOPS_MODULES,
+];
+
+export const ALL_MODULES: PricingModule[] = [
+  BASE_RETAINER_MODULE,
+  ...ADDON_MODULES,
+];
+
+export const MODULE_IDS = ALL_MODULES.map((m) => m.id) as [string, ...string[]];
+export type ModuleId = (typeof ALL_MODULES)[number]["id"];
+
+export const MODULE_MAP: Record<string, PricingModule> = Object.fromEntries(
+  ALL_MODULES.map((m) => [m.id, m])
+);
+
+export interface QuickBundlePreset {
+  id: string;
+  name: string;
+  description: string;
+  moduleIds: string[];
+  badge?: string;
 }
 
-export const DROPDOWN_GROUPS: DropdownGroup[] = [
+export const QUICK_BUNDLES: QuickBundlePreset[] = [
   {
-    label: "⭐ Featured Bundle",
-    options: [
-      {
-        value: "whole-house-bundle",
-        label: "Whole House Bundle (Tech + Sales + RevOps) — $1,125/mo (75 hrs)",
-      },
+    id: "essential-starter",
+    name: "Starter Crew Pack",
+    description: "Base Access + Email Defender + Instant Lead Router + App-to-Accounting Bridge",
+    moduleIds: ["base-retainer", "inbox-defender", "lead-router", "app-to-accounting"],
+    badge: "Most Popular Starter",
+  },
+  {
+    id: "fleet-tech-pack",
+    name: "Fleet & Yard Operations",
+    description: "Base Access + In-Box Defender + Tablet Lockdown + Shop Wi-Fi Shield",
+    moduleIds: ["base-retainer", "inbox-defender", "fleet-tablet-lockdown", "shop-network-shield"],
+  },
+  {
+    id: "sales-rev-engine",
+    name: "Sales & Cash Flow Engine",
+    description: "Base Access + Lead Router + Estimate Chaser + Commercial Hitlists + Accounting Sync + Debt Collector",
+    moduleIds: [
+      "base-retainer",
+      "lead-router",
+      "estimate-chaser",
+      "commercial-hitlists",
+      "app-to-accounting",
+      "debt-collector",
     ],
   },
   {
-    label: "TechOps Plans (The Toolkit)",
-    options: TECHOPS_PLANS.map((p) => ({
-      value: p.id,
-      label: `${p.shortName} — $${p.price}/mo (${p.hours} hrs)`,
-    })),
-  },
-  {
-    label: "SalesOps Plans (The Front Door)",
-    options: SALESOPS_PLANS.map((p) => ({
-      value: p.id,
-      label: `${p.shortName} — $${p.price}/mo (${p.hours} hrs)`,
-    })),
-  },
-  {
-    label: "RevOps Plans (The Vault)",
-    options: REVOPS_PLANS.map((p) => ({
-      value: p.id,
-      label: `${p.shortName} — $${p.price}/mo (${p.hours} hrs)`,
-    })),
-  },
-  {
-    label: "General Inquiry",
-    options: [
-      {
-        value: "checkup",
-        label: "Not sure yet — just the free checkup",
-      },
-    ],
+    id: "full-fractional",
+    name: "Full Back Office",
+    description: "Every TechOps, SalesOps, and RevOps module active for maximum speed.",
+    moduleIds: ALL_MODULES.map((m) => m.id),
+    badge: "Total Coverage",
   },
 ];
 
-/** Maps URL search params or legacy aliases to a validated Interest enum value. */
-export function normalizeInterest(val: string | null | undefined): Interest {
-  if (!val) return "checkup";
-  const trimmed = val.trim().toLowerCase();
-  const legacyMap: Record<string, Interest> = {
-    "keep-it-running": "tech-keep-it-running",
-    "field-to-office": "tech-field-to-office",
-    "outsourced-it": "tech-outsourced-it",
-    "bundle": "whole-house-bundle",
-    "whole-house": "whole-house-bundle",
-    "whole-house-bundle": "whole-house-bundle",
-    "checkup": "checkup",
-  };
-  if (legacyMap[trimmed]) return legacyMap[trimmed];
-  if ((INTEREST_VALUES as readonly string[]).includes(trimmed)) {
-    return trimmed as Interest;
+export function calculateTotalMonthlyCost(selectedIds: string[]): number {
+  const set = new Set(selectedIds);
+  set.add(BASE_RETAINER_MODULE.id);
+  return ALL_MODULES.reduce((sum, mod) => (set.has(mod.id) ? sum + mod.price : sum), 0);
+}
+
+export function sanitizeSelectedModules(selectedIds: unknown): string[] {
+  if (!Array.isArray(selectedIds)) return [BASE_RETAINER_MODULE.id];
+  const valid = selectedIds.filter(
+    (id): id is string => typeof id === "string" && id in MODULE_MAP
+  );
+  if (!valid.includes(BASE_RETAINER_MODULE.id)) {
+    valid.unshift(BASE_RETAINER_MODULE.id);
   }
-  return "checkup";
+  return Array.from(new Set(valid));
 }
 
-/** Suggests a plan or bundle based on crew size for the diagnostic calculator. */
-export function recommendPlan(crewSize: number): Plan {
-  if (crewSize >= 25) {
-    return WHOLE_HOUSE_BUNDLE;
+/** Recommend suggested add-on modules based on crew size. */
+export function recommendModulesForCrew(crewSize: number): string[] {
+  const recs = ["base-retainer", "inbox-defender"];
+  if (crewSize >= 5) {
+    recs.push("fleet-tablet-lockdown", "app-to-accounting");
+  }
+  if (crewSize >= 10) {
+    recs.push("lead-router", "estimate-chaser", "debt-collector");
   }
   if (crewSize >= 15) {
-    return TECHOPS_PLANS[2]; // Outsourced IT ($375)
+    recs.push("shop-network-shield", "commercial-hitlists", "job-profit-xray", "onsite-dispatch-pass");
   }
-  if (crewSize >= 5) {
-    return TECHOPS_PLANS[1]; // Field to Office ($299)
-  }
-  return TECHOPS_PLANS[0]; // Keep It Running ($195)
+  return sanitizeSelectedModules(recs);
 }
 
-/** Locale-pinned formatting so server and client render identical markup (avoids hydration mismatches). */
-export const formatUSD = (n: number) =>
-  `$${Math.round(n).toLocaleString("en-US")}`;
+export const formatUSD = (n: number) => `$${Math.round(n).toLocaleString("en-US")}`;
+
+/* Legacy exports kept for backward compatibility with existing components / structured data */
+export const ALL_PLANS = ALL_MODULES.map((m) => ({
+  id: m.id,
+  name: m.title,
+  shortName: m.title,
+  price: m.price,
+  hours: m.isMandatory ? 2 : 4,
+  bestFor: m.categoryLabel,
+  crewRange: "All Trade Crews",
+  tierNumber: "Module",
+  tierLabel: m.categoryLabel,
+}));

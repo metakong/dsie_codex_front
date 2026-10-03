@@ -2,22 +2,18 @@
 
 import { useState } from "react";
 import {
-  DROPDOWN_GROUPS,
-  INTEREST_VALUES,
+  BASE_RETAINER_MODULE,
+  ADDON_MODULES,
+  calculateTotalMonthlyCost,
   formatUSD,
-  recommendPlan,
-  type Interest,
+  recommendModulesForCrew,
 } from "@/lib/plans";
 import { useSelectedPlan } from "./SelectedPlanContext";
 
-/*
- * Calculator assumptions — every number shown to the visitor is derived from these.
- * Keep them conservative and disclosed on-screen.
- */
-const HOURLY_COST = 35; // Blended Springfield-area labor cost per hour (owner, office, or tech)
+const HOURLY_COST = 35; // Blended Springfield-area labor cost per hour
 const WEEKS_PER_MONTH = 4.33;
-const HOURS_PER_APP_PER_WEEK = 3; // Copying info between each app that doesn't sync, plus fixing mistakes
-const TECH_HOURS_PER_WORKER_PER_WEEK = 0.5; // Frozen tablets, logins, Wi-Fi, printers
+const HOURS_PER_APP_PER_WEEK = 3;
+const TECH_HOURS_PER_WORKER_PER_WEEK = 0.5;
 
 const CREW_MIN = 2;
 const CREW_MAX = 35;
@@ -71,7 +67,7 @@ const inputClass =
 const labelClass = "block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-1.5";
 
 export default function Checkup() {
-  const { interest, setInterest } = useSelectedPlan();
+  const { selectedModules, toggleModule, setSelectedModules } = useSelectedPlan();
 
   // Calculator state
   const [crewSize, setCrewSize] = useState(8);
@@ -81,25 +77,24 @@ export default function Checkup() {
   // Form state
   const [form, setForm] = useState({ contactName: "", companyName: "", email: "", phone: "", website: "" });
   const [status, setStatus] = useState<"idle" | "submitting" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [referenceId, setReferenceId] = useState<string | null>(null);
 
-  // Deterministic math
+  // Math
   const paperworkMonthlyHours = paperworkHours * WEEKS_PER_MONTH;
   const appsMonthlyHours = disconnectedApps * HOURS_PER_APP_PER_WEEK * WEEKS_PER_MONTH;
   const techMonthlyHours = crewSize * TECH_HOURS_PER_WORKER_PER_WEEK * WEEKS_PER_MONTH;
   const totalMonthlyHours = paperworkMonthlyHours + appsMonthlyHours + techMonthlyHours;
-  const monthlyCost = Math.round(totalMonthlyHours * HOURLY_COST);
-  const yearlyCost = monthlyCost * 12;
+  const wastedMonthlyCost = Math.round(totalMonthlyHours * HOURLY_COST);
+  const wastedYearlyCost = wastedMonthlyCost * 12;
   const workWeeks = totalMonthlyHours / 40;
 
-  const breakdown = [
-    { label: "Paperwork & re-typing", cost: paperworkMonthlyHours * HOURLY_COST },
-    { label: "Copying info between apps", cost: appsMonthlyHours * HOURLY_COST },
-    { label: "Tech hiccups on the crew", cost: techMonthlyHours * HOURLY_COST },
-  ];
+  const currentPlanCost = calculateTotalMonthlyCost(selectedModules);
 
-  const suggested = recommendPlan(crewSize);
-  const breakEvenHours = Math.ceil(suggested.price / HOURLY_COST);
+  const handleApplyRecommended = () => {
+    const recs = recommendModulesForCrew(crewSize);
+    setSelectedModules(recs);
+  };
 
   const update = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -107,6 +102,7 @@ export default function Checkup() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("submitting");
+    setErrorMessage(null);
 
     try {
       const res = await fetch("/api/intake", {
@@ -114,20 +110,23 @@ export default function Checkup() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
-          interest,
+          selectedModules,
           crewSize,
           paperworkHours,
           disconnectedApps,
-          estimatedMonthlyCost: monthlyCost,
+          estimatedMonthlyCost: currentPlanCost,
         }),
       });
       const data = await res.json();
-      if (!res.ok || !data.success) throw new Error("Submission rejected");
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Submission failed. Please check the fields.");
+      }
       setReferenceId(data.referenceId);
       setStatus("idle");
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Checkup request failed", err);
       setStatus("error");
+      setErrorMessage(err instanceof Error ? err.message : "Something went wrong submitting your request.");
     }
   };
 
@@ -141,13 +140,13 @@ export default function Checkup() {
         <div className="flex items-start justify-between gap-4 border-b border-zinc-800 pb-5 mb-8">
           <div>
             <span className="font-mono text-xs text-emerald-400 uppercase tracking-widest">
-              Free Back-Office Checkup
+              Free Back-Office Checkup &amp; Custom Quote
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-zinc-100 mt-1">
-              What Is Office Busywork Costing You?
+              What Is Office Busywork Costing Your Shop?
             </h2>
             <p className="mt-2 text-sm text-zinc-400">
-              Slide the bars to match your shop. The numbers update as you go.
+              Slide the bars to match your crew. Compare your wasted labor to your custom modular total below.
             </p>
           </div>
           <div className="font-mono text-[11px] text-zinc-600 hidden sm:block whitespace-nowrap pt-1">
@@ -161,19 +160,19 @@ export default function Checkup() {
             <Slider
               id="crew-size"
               label="How many people work for you?"
-              help="Count everyone: field crew, office, and you."
+              help="Count everyone: field techs, office staff, and yourself."
               value={crewSize}
               min={CREW_MIN}
               max={CREW_MAX}
-              display={`${crewSize}${crewSize === CREW_MAX ? "+" : ""} people`}
+              display={`${crewSize}${crewSize === CREW_MAX ? "+" : ""} workers`}
               minLabel={`${CREW_MIN}`}
               maxLabel={`${CREW_MAX}+`}
               onChange={setCrewSize}
             />
             <Slider
               id="paperwork-hours"
-              label="Hours a week on paperwork"
-              help="Retyping timecards, building invoices, chasing down job details."
+              label="Hours a week spent on paperwork"
+              help="Retyping timecards, building estimates, chasing down job details."
               value={paperworkHours}
               min={0}
               max={20}
@@ -185,7 +184,7 @@ export default function Checkup() {
             <Slider
               id="disconnected-apps"
               label="Apps that don't talk to each other"
-              help="QuickBooks, your scheduling app, spreadsheets, the paper timecard book…"
+              help="QuickBooks, scheduling apps, spreadsheets, paper notebooks…"
               value={disconnectedApps}
               min={0}
               max={6}
@@ -196,74 +195,52 @@ export default function Checkup() {
             />
           </div>
 
-          {/* Results */}
-          <div className="border border-zinc-800 bg-zinc-900/60 p-5 sm:p-6 flex flex-col" aria-live="polite">
-            <div className="font-mono text-xs text-zinc-400 uppercase">Paid hours lost every month</div>
-            <div className="mt-1 flex items-baseline gap-2">
-              <span className="text-3xl font-bold font-mono text-zinc-100">
-                {Math.round(totalMonthlyHours)}
-              </span>
-              <span className="text-xs font-mono text-zinc-500">
-                hrs &asymp; {workWeeks.toFixed(1)} full work weeks
-              </span>
-            </div>
-
-            <div className="mt-5 pt-5 border-t border-zinc-800">
-              <div className="font-mono text-xs text-zinc-400 uppercase">What that costs you</div>
-              <div className="text-3xl font-bold font-mono text-red-400 mt-1">
-                {formatUSD(monthlyCost)}
-                <span className="text-xs text-zinc-500 font-normal"> /mo</span>
-              </div>
-              <div className="text-xs font-mono text-zinc-500 mt-1">
-                {formatUSD(yearlyCost)} a year out the door
-              </div>
-              <ul className="mt-4 space-y-1.5 font-mono text-xs">
-                {breakdown.map((row) => (
-                  <li key={row.label} className="flex justify-between gap-3 text-zinc-400">
-                    <span>{row.label}</span>
-                    <span className="text-zinc-300">{formatUSD(row.cost)}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="mt-5 pt-5 border-t border-zinc-800">
-              <div className="font-mono text-xs text-zinc-400 uppercase">Suggested for your crew</div>
-              <div className="mt-1 flex items-baseline justify-between gap-2">
-                <span className="font-semibold text-emerald-400">{suggested.shortName}</span>
-                <span className="font-mono text-sm text-zinc-200">
-                  {formatUSD(suggested.price)}
-                  <span className="text-xs text-zinc-500">/mo</span>
+          {/* Calculator Output */}
+          <div className="border border-zinc-800 bg-zinc-900/60 p-5 sm:p-6 flex flex-col justify-between" aria-live="polite">
+            <div>
+              <div className="font-mono text-xs text-zinc-400 uppercase">Paid hours lost every month</div>
+              <div className="mt-1 flex items-baseline gap-2">
+                <span className="text-3xl font-bold font-mono text-zinc-100">
+                  {Math.round(totalMonthlyHours)}
+                </span>
+                <span className="text-xs font-mono text-zinc-500">
+                  hrs &asymp; {workWeeks.toFixed(1)} full work weeks
                 </span>
               </div>
-              <p className="mt-1 text-xs text-zinc-400">
-                Pays for itself if it saves you just{" "}
-                <strong className="text-zinc-200">{breakEvenHours} hours</strong> a month.
+
+              <div className="mt-5 pt-5 border-t border-zinc-800">
+                <div className="font-mono text-xs text-zinc-400 uppercase">Estimated Waste Cost</div>
+                <div className="text-3xl font-bold font-mono text-red-400 mt-1">
+                  {formatUSD(wastedMonthlyCost)}
+                  <span className="text-xs text-zinc-500 font-normal"> /mo</span>
+                </div>
+                <div className="text-xs font-mono text-zinc-500 mt-1">
+                  {formatUSD(wastedYearlyCost)} a year out the window
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5 pt-5 border-t border-zinc-800">
+              <div className="font-mono text-xs text-zinc-400 uppercase">Recommended for {crewSize} Workers</div>
+              <p className="mt-1 text-xs text-zinc-300 leading-relaxed">
+                Auto-select recommended modules for a crew of {crewSize}:
               </p>
-              <a
-                href="#get-started"
-                onClick={() => {
-                  setInterest(suggested.id);
-                  if (typeof window !== "undefined") {
-                    const url = new URL(window.location.href);
-                    url.searchParams.set("plan", suggested.id);
-                    window.history.replaceState(null, "", url.toString());
-                  }
-                }}
-                className="mt-4 block text-center border border-emerald-500/40 text-emerald-400 font-mono text-xs uppercase tracking-wider py-2.5 hover:bg-emerald-500 hover:text-zinc-950 transition-colors"
+              <button
+                type="button"
+                onClick={handleApplyRecommended}
+                className="mt-3 block w-full text-center border border-emerald-500/40 text-emerald-400 font-mono text-xs uppercase tracking-wider py-2.5 hover:bg-emerald-500 hover:text-zinc-950 transition-colors"
               >
-                Choose {suggested.shortName}
-              </a>
+                Apply Recommended Modules Setup
+              </button>
             </div>
           </div>
         </div>
 
         <p className="mt-4 text-[11px] font-mono text-zinc-600 leading-relaxed">
-          Estimate assumes ${HOURLY_COST}/hr blended Springfield labor cost, about {HOURS_PER_APP_PER_WEEK} hrs/week
-          of copy-and-paste per app that doesn&apos;t sync, and about 30 minutes a week of tech trouble per worker.
+          Assumes ${HOURLY_COST}/hr blended labor cost, {HOURS_PER_APP_PER_WEEK} hrs/wk per non-syncing app, and 30 mins/wk tech trouble per worker.
         </p>
 
-        {/* Intake form */}
+        {/* CUSTOM MODULE SELECTION BREAKDOWN IN FORM */}
         <div id="get-started" className="scroll-mt-24 mt-10 pt-8 border-t border-zinc-800">
           {referenceId ? (
             <div className="p-6 border border-emerald-500/40 bg-emerald-500/10 text-center" role="status">
@@ -271,19 +248,73 @@ export default function Checkup() {
                 REQUEST RECEIVED &middot; REF {referenceId}
               </span>
               <p className="text-sm text-zinc-300 mt-2">
-                Thanks{firstName ? `, ${firstName}` : ""}. We&apos;ll look over your numbers and get back to
-                you within 24 hours with a plain-English game plan.
+                Thanks{firstName ? `, ${firstName}` : ""}. We&apos;ve saved your configured plan ({selectedModules.length} modules, {formatUSD(currentPlanCost)}/mo). We&apos;ll reach out within 24 hours to confirm your setup.
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <h3 className="text-lg font-bold text-zinc-100">Get your free checkup</h3>
+                <h3 className="text-lg font-bold text-zinc-100">Review &amp; Submit Your Custom Back Office</h3>
                 <p className="mt-1 text-sm text-zinc-400">
-                  Tell us who you are. We&apos;ll send the numbers above along with your request.
+                  Adjust your active modules below or submit your details to lock in your quote.
                 </p>
               </div>
 
+              {/* ACTIVE MODULES CHECKLIST */}
+              <div className="border border-zinc-800 bg-zinc-900/50 p-4 sm:p-5">
+                <div className="flex items-center justify-between border-b border-zinc-800 pb-3 mb-3">
+                  <span className="font-mono text-xs text-emerald-400 font-bold uppercase tracking-wider">
+                    Configured Plan ({selectedModules.length} Modules)
+                  </span>
+                  <span className="font-mono text-base font-bold text-emerald-400">
+                    Total: {formatUSD(currentPlanCost)}/mo
+                  </span>
+                </div>
+
+                <div className="space-y-2">
+                  {/* MANDATORY BASE ITEM */}
+                  <div className="flex items-center justify-between text-xs font-mono bg-zinc-950 p-2.5 border border-emerald-500/30 text-zinc-200">
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-400">🔒</span>
+                      <span className="font-bold">{BASE_RETAINER_MODULE.title}</span>
+                      <span className="text-[10px] text-zinc-500 uppercase">(Mandatory Base)</span>
+                    </div>
+                    <span className="text-emerald-400 font-bold">{formatUSD(BASE_RETAINER_MODULE.price)}/mo</span>
+                  </div>
+
+                  {/* ADDON MODULE TOGGLES */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                    {ADDON_MODULES.map((mod) => {
+                      const isChecked = selectedModules.includes(mod.id);
+                      return (
+                        <label
+                          key={mod.id}
+                          className={`flex items-start gap-2 p-2 border text-xs font-mono cursor-pointer transition-colors ${
+                            isChecked
+                              ? "border-emerald-500/50 bg-emerald-500/10 text-zinc-200"
+                              : "border-zinc-800/80 bg-zinc-950 text-zinc-400 hover:border-zinc-700"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => toggleModule(mod.id)}
+                            className="mt-0.5 accent-emerald-500 cursor-pointer"
+                          />
+                          <div className="flex-grow flex items-center justify-between gap-1">
+                            <span className="line-clamp-1">{mod.title}</span>
+                            <span className="text-emerald-400 whitespace-nowrap font-bold">
+                              +${mod.price}
+                            </span>
+                          </div>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* CONTACT DETAILS */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="contactName" className={labelClass}>Your name</label>
@@ -307,46 +338,9 @@ export default function Checkup() {
                   <input id="phone" type="tel" maxLength={30} autoComplete="tel" inputMode="tel"
                     value={form.phone} onChange={update("phone")} className={inputClass} />
                 </div>
-                <div className="sm:col-span-2">
-                  <label htmlFor="interest" className={labelClass}>Which plan are you interested in?</label>
-                  <select
-                    id="interest"
-                    value={interest}
-                    onChange={(e) => {
-                      const value = e.target.value as Interest;
-                      if ((INTEREST_VALUES as readonly string[]).includes(value)) {
-                        setInterest(value);
-                        if (typeof window !== "undefined") {
-                          const url = new URL(window.location.href);
-                          url.searchParams.set("plan", value);
-                          window.history.replaceState(null, "", url.toString());
-                        }
-                      }
-                    }}
-                    className={`${inputClass} cursor-pointer [color-scheme:dark]`}
-                  >
-                    {DROPDOWN_GROUPS.map((group) => (
-                      <optgroup
-                        key={group.label}
-                        label={group.label}
-                        className="bg-zinc-900 text-zinc-300 font-semibold"
-                      >
-                        {group.options.map((option) => (
-                          <option
-                            key={option.value}
-                            value={option.value}
-                            className="bg-zinc-950 text-zinc-100 font-normal"
-                          >
-                            {option.label}
-                          </option>
-                        ))}
-                      </optgroup>
-                    ))}
-                  </select>
-                </div>
               </div>
 
-              {/* Honeypot: hidden from people, catches form-filling bots */}
+              {/* Honeypot */}
               <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
                 <label htmlFor="website">Website</label>
                 <input id="website" type="text" tabIndex={-1} autoComplete="off"
@@ -355,20 +349,20 @@ export default function Checkup() {
 
               {status === "error" && (
                 <p role="alert" className="border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-                  Something went wrong sending your info. Please check the fields and try again.
+                  {errorMessage || "Something went wrong sending your info. Please check the fields and try again."}
                 </p>
               )}
 
-              <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 pt-1">
+              <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 pt-2">
                 <span className="font-mono text-[11px] text-zinc-500 text-center sm:text-left">
-                  No sales pitch. Just a 20-minute call about your numbers.
+                  No pushy sales calls. Just a 20-minute review of your back-office setup.
                 </span>
                 <button
                   type="submit"
                   disabled={status === "submitting"}
                   className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-mono text-xs font-semibold uppercase tracking-wider px-6 py-3.5 sm:py-3 transition-colors disabled:opacity-50"
                 >
-                  {status === "submitting" ? "Sending\u2026" : "Get My Free Checkup"}
+                  {status === "submitting" ? "Submitting…" : `Lock In Quote (${formatUSD(currentPlanCost)}/mo)`}
                 </button>
               </div>
             </form>
