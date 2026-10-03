@@ -18,17 +18,17 @@ const spaceMono = Space_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://thedsiecodex.com"),
-  title: "The DSIE Codex | Operational Diagnostics & RevOps — Springfield, MO",
+  title: "The DSIE Codex | Fractional Back Office for the Trades — Springfield, MO",
   description:
-    "Automated open-book scoreboards, stateless MCP enterprise bridges, and turnaround variance audits for Springfield-area manufacturing and logistics operators.",
+    "Fractional back office for Springfield trade and service crews. On-call field tech support, automated lead tracking, and streamlined billing on flat monthly plans.",
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.svg",
   },
   openGraph: {
-    title: "The DSIE Codex | Operational Diagnostics & RevOps",
+    title: "The DSIE Codex | The Fractional Back Office for the Trades",
     description:
-      "Automated open-book scoreboards, stateless MCP enterprise bridges, and turnaround variance audits for Springfield-area manufacturing and logistics operators.",
+      "On-call field tech support, automated lead tracking, and streamlined billing for Springfield-area contractors and service businesses.",
     url: "https://thedsiecodex.com",
     siteName: "The DSIE Codex",
     locale: "en_US",
@@ -36,9 +36,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "The DSIE Codex | Operational Diagnostics & RevOps",
+    title: "The DSIE Codex | The Fractional Back Office for the Trades",
     description:
-      "Automated open-book scoreboards, stateless MCP enterprise bridges, and turnaround variance audits for Springfield-area manufacturing and logistics operators.",
+      "On-call field tech support, automated lead tracking, and streamlined billing for Springfield-area contractors and service businesses.",
   },
 };
 

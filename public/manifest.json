@@ -1,11 +1,11 @@
 {
   "name": "The DSIE Codex",
   "short_name": "DSIE Codex",
-  "description": "Fractional AI integration. Built, secured, and operated.",
+  "description": "The fractional back office for trade and service businesses in Springfield, MO.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0A0A0A",
-  "theme_color": "#C9A84C",
+  "background_color": "#09090b",
+  "theme_color": "#10b981",
   "icons": [
     {
       "src": "/favicon.svg",
