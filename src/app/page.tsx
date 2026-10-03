@@ -150,7 +150,167 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. DETERMINISTIC DIAGNOSTIC TERMINAL */}
+      {/* 3. MANAGED TECH SUPPORT PLANS */}
+      <section id="plans" className="scroll-mt-20 border-t border-zinc-900 bg-zinc-950 py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          {/* Section Header */}
+          <div className="mb-12">
+            <span className="font-mono text-xs text-emerald-400 uppercase tracking-widest">
+              Local Trade &amp; Service Operations
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-bold text-zinc-100 mt-1">
+              Stop Paying Your Best Technicians to Fix the Wi-Fi.
+            </h2>
+            <p className="mt-3 text-sm sm:text-base text-zinc-400 max-w-2xl leading-relaxed">
+              On-call, fractional tech operations for Springfield-area crews. We keep your field tablets running, sync your timecards to payroll, and eliminate shop tech headaches for less than an entry-level hire.
+            </p>
+          </div>
+
+          {/* 3-Tier Pricing Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Tier 1 */}
+            <div className="border border-zinc-800 bg-zinc-900/40 p-6 flex flex-col justify-between hover:border-emerald-500/50 transition-all">
+              <div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-xs text-zinc-500 uppercase tracking-wider">01 // ESSENTIAL</span>
+                  <span className="font-mono text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 whitespace-nowrap">2–5 Workers</span>
+                </div>
+                <h3 className="text-xl font-bold text-zinc-100 mt-3">The &quot;Keep It Running&quot; Plan</h3>
+                <div className="mt-4 flex items-baseline gap-1">
+                  <span className="text-3xl font-bold font-mono text-zinc-100">$160</span>
+                  <span className="text-xs font-mono text-zinc-500">/ month</span>
+                </div>
+                <p className="font-mono text-xs text-zinc-400 mt-1 pb-4 border-b border-zinc-800">
+                  Up to 4 hours/mo dedicated support
+                </p>
+                <ul className="mt-6 space-y-3 text-sm text-zinc-300">
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-mono text-xs mt-0.5">✓</span>
+                    <span><strong>Spam Defense:</strong> Stop estimates and invoices from landing in customer junk folders.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-mono text-xs mt-0.5">✓</span>
+                    <span><strong>Onboarding &amp; Lockout:</strong> Fast email and login setup for new hires; instant revocation upon exit.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-mono text-xs mt-0.5">✓</span>
+                    <span><strong>Shop Wi-Fi &amp; Printers:</strong> Fix dead spots in metal shops and get frozen printers back online.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-mono text-xs mt-0.5">✓</span>
+                    <span><strong>Remote Screen Support:</strong> Call us when software freezes instead of wasting your own billable hours.</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="mt-8 pt-4 border-t border-zinc-800/80">
+                <a
+                  href="#diagnostic"
+                  className="block w-full text-center border border-zinc-700 bg-zinc-800/60 hover:bg-zinc-800 text-zinc-200 font-mono text-xs uppercase tracking-wider py-2.5 transition-colors"
+                >
+                  Request Base Coverage
+                </a>
+              </div>
+            </div>
+
+            {/* Tier 2 */}
+            <div className="border border-emerald-500/40 bg-zinc-900/80 p-6 flex flex-col justify-between relative shadow-lg shadow-emerald-950/20">
+              <div className="absolute -top-3 right-4 bg-emerald-500 text-zinc-950 font-mono text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5">
+                Most Popular
+              </div>
+              <div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-xs text-emerald-400 uppercase tracking-wider">02 // FIELD &amp; CREW</span>
+                  <span className="font-mono text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 whitespace-nowrap">5–15 Workers</span>
+                </div>
+                <h3 className="text-xl font-bold text-zinc-100 mt-3">The &quot;Field to Office&quot; Plan</h3>
+                <div className="mt-4 flex items-baseline gap-1">
+                  <span className="text-3xl font-bold font-mono text-zinc-100">$260</span>
+                  <span className="text-xs font-mono text-zinc-500">/ month</span>
+                </div>
+                <p className="font-mono text-xs text-zinc-400 mt-1 pb-4 border-b border-zinc-800">
+                  Up to 10 hours/mo dedicated support
+                </p>
+                <p className="text-xs font-mono text-emerald-400/90 mt-4 mb-2">Everything in Keep It Running, plus:</p>
+                <ul className="space-y-3 text-sm text-zinc-300">
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-mono text-xs mt-0.5">✓</span>
+                    <span><strong>Tablet &amp; App Triage:</strong> Pre-configure job-site tablets and fix dispatch glitches on the road.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-mono text-xs mt-0.5">✓</span>
+                    <span><strong>Timeclock-to-Payroll Sync:</strong> Ensure crew punch times flow directly into payroll without manual re-entry.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-mono text-xs mt-0.5">✓</span>
+                    <span><strong>Instant Lead Routing:</strong> Push web contact forms and quote requests straight to dispatch phones via text message.</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="mt-8 pt-4 border-t border-zinc-800/80">
+                <a
+                  href="#diagnostic"
+                  className="block w-full text-center bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-mono text-xs font-semibold uppercase tracking-wider py-2.5 transition-colors"
+                >
+                  Deploy Crew Support
+                </a>
+              </div>
+            </div>
+
+            {/* Tier 3 */}
+            <div className="border border-zinc-800 bg-zinc-900/40 p-6 flex flex-col justify-between hover:border-emerald-500/50 transition-all">
+              <div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-xs text-zinc-500 uppercase tracking-wider">03 // DEDICATED</span>
+                  <span className="font-mono text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 whitespace-nowrap">15–35 Workers</span>
+                </div>
+                <h3 className="text-xl font-bold text-zinc-100 mt-3">The &quot;Outsourced IT&quot; Plan</h3>
+                <div className="mt-4 flex items-baseline gap-1">
+                  <span className="text-3xl font-bold font-mono text-zinc-100">$375</span>
+                  <span className="text-xs font-mono text-zinc-500">/ month</span>
+                </div>
+                <p className="font-mono text-xs text-zinc-400 mt-1 pb-4 border-b border-zinc-800">
+                  Up to 25 hours/mo dedicated support
+                </p>
+                <p className="text-xs font-mono text-emerald-400/90 mt-4 mb-2">Everything in Field to Office, plus:</p>
+                <ul className="space-y-3 text-sm text-zinc-300">
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-mono text-xs mt-0.5">✓</span>
+                    <span><strong>Local On-Site Visits:</strong> In-person troubleshooting at your Springfield office or yard when remote fixes won&apos;t cut it.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-mono text-xs mt-0.5">✓</span>
+                    <span><strong>Software Bridges:</strong> Connect customer lists, job costing, and accounting so your systems talk to each other automatically.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-mono text-xs mt-0.5">✓</span>
+                    <span><strong>Clean Project Archives:</strong> Keep job-site photos, bids, and contracts organized and backed up securely.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-mono text-xs mt-0.5">✓</span>
+                    <span><strong>Phone Tree Management:</strong> Automated after-hours routing so emergency calls always reach the on-call tech.</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="mt-8 pt-4 border-t border-zinc-800/80">
+                <a
+                  href="#diagnostic"
+                  className="block w-full text-center border border-zinc-700 bg-zinc-800/60 hover:bg-zinc-800 text-zinc-200 font-mono text-xs uppercase tracking-wider py-2.5 transition-colors"
+                >
+                  Retain Full Department
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Transparent Policy Footer Banner */}
+          <div className="mt-10 p-4 border border-zinc-800/80 bg-zinc-900/30 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-zinc-400">
+            <span>Zero long-term contracts. Transparent billing. Additional hours billed at simple flat rates tied to your plan.</span>
+            <span className="text-emerald-400 uppercase tracking-wider whitespace-nowrap">Springfield, MO Direct Support</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. DETERMINISTIC DIAGNOSTIC TERMINAL */}
       <section id="diagnostic" className="border-t border-zinc-900 bg-zinc-900/20 py-20 px-6">
         <div className="max-w-4xl mx-auto border border-zinc-800 bg-zinc-950 p-8 sm:p-12">
           

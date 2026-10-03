@@ -54,3 +54,9 @@ CLAUDE.md
 .agentrules
 SERVICES_MENU.md
 skills/
+
+# cloudflare / opennext build output & local secrets
+/.open-next/
+/.wrangler/
+.dev.vars*
+!.dev.vars.example
