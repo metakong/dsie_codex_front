@@ -29,7 +29,9 @@ export default function Hero() {
         </div>
 
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-zinc-100 max-w-4xl leading-[1.08]">
-          Stop Putting Out Fires. Start Preventing Them.
+          Stop Putting Out Fires,
+          <br />
+          Start Preventing Them.
         </h1>
         <p className="mt-4 text-xl sm:text-2xl font-semibold text-emerald-400 max-w-3xl leading-snug">
           Build a custom back office with modular Tech Operations, Sales Operations, and Revenue Operations services.

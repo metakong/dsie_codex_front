@@ -151,7 +151,7 @@ export default function Checkup() {
         <div className="flex items-start justify-between gap-4 border-b border-zinc-800 pb-5 mb-8">
           <div>
             <span className="font-mono text-xs text-emerald-400 uppercase tracking-widest">
-              Free Operational Checkup &amp; Audit Application
+              Operational Audit Application
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-zinc-100 mt-1">
               What Is Office Busywork Costing Your Business?
@@ -266,7 +266,7 @@ export default function Checkup() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <span className="font-mono text-xs text-emerald-400 uppercase tracking-widest font-semibold">
-                  Step 2 &middot; Application
+                  Final Step &middot; Application
                 </span>
                 <h3 className="text-xl font-bold text-zinc-100 mt-1">Apply for an Operational Audit</h3>
                 <p className="mt-1 text-sm text-zinc-400">

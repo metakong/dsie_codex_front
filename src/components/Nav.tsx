@@ -15,6 +15,12 @@ export default function Nav() {
         </Link>
         <nav aria-label="Main" className="flex shrink-0 items-center gap-4 sm:gap-6">
           <a
+            href="#about"
+            className="hidden sm:inline font-mono text-xs uppercase tracking-wider text-zinc-400 hover:text-emerald-400 transition-colors"
+          >
+            About Me
+          </a>
+          <a
             href="#services"
             className="hidden sm:inline font-mono text-xs uppercase tracking-wider text-zinc-400 hover:text-emerald-400 transition-colors"
           >
@@ -30,7 +36,7 @@ export default function Nav() {
             href="#checkup"
             className="font-mono text-xs uppercase tracking-wider bg-zinc-900 border border-emerald-500/40 text-emerald-400 px-3 py-1.5 hover:bg-emerald-500 hover:text-zinc-950 transition-all whitespace-nowrap"
           >
-            Free Checkup
+            Apply for Audit
           </a>
         </nav>
       </div>
