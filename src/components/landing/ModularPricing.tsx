@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   BASE_RETAINER_MODULE,
   TECHOPS_MODULES,
@@ -33,11 +34,13 @@ export default function ModularPricing() {
     setSelectedModules([BASE_RETAINER_MODULE.id]);
   };
 
-  const scrollToApplication = () => {
+  const scrollToApplication = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (typeof window !== "undefined") {
       const el = document.getElementById("checkup");
       if (el) {
+        e.preventDefault();
         el.scrollIntoView({ behavior: "smooth" });
+        window.history.pushState(null, "", "/#checkup");
       }
     }
   };
@@ -127,13 +130,13 @@ export default function ModularPricing() {
                 Estimated Total: {formatUSD(totalMonthlyCost)}/mo
               </span>
             </div>
-            <a
-              href="#checkup"
+            <Link
+              href="/#checkup"
               onClick={scrollToApplication}
               className="text-xs font-mono uppercase tracking-wider text-emerald-400 hover:text-emerald-300 underline inline-flex items-center"
             >
               Apply for an Operational Audit &rarr;
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -298,13 +301,13 @@ export default function ModularPricing() {
             <strong className="text-zinc-200">Zero Lock-In Commitment:</strong> Add or remove modules at any time.
             Bills are flat monthly rates with transparent invoicing. Based locally in Springfield, MO.
           </div>
-          <a
-            href="#checkup"
+          <Link
+            href="/#checkup"
             onClick={scrollToApplication}
             className="shrink-0 text-emerald-400 hover:text-emerald-300 underline uppercase tracking-wider inline-flex items-center"
           >
             Apply for an Operational Audit ({selectedCount} active) &rarr;
-          </a>
+          </Link>
         </div>
       </div>
     </section>

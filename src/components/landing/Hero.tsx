@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { BASE_RETAINER_MODULE, formatUSD } from "@/lib/plans";
 
 const TRADES = ["HVAC", "Plumbing", "Electrical", "Roofing", "Commercial Contractors"];
@@ -42,18 +43,18 @@ export default function Hero() {
         </p>
 
         <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
-          <a
-            href="#plans"
+          <Link
+            href="/#plans"
             className="text-center bg-emerald-500 text-zinc-950 font-mono text-xs font-semibold uppercase tracking-wider px-6 py-4 sm:py-3.5 hover:bg-emerald-400 transition-colors"
           >
             Build Your Custom Plan &rarr;
-          </a>
-          <a
-            href="#checkup"
+          </Link>
+          <Link
+            href="/#checkup"
             className="text-center border border-zinc-800 bg-zinc-900 text-zinc-300 font-mono text-xs uppercase tracking-wider px-6 py-4 sm:py-3.5 hover:border-emerald-500/50 hover:text-emerald-400 transition-colors"
           >
             What&apos;s Busywork Costing You?
-          </a>
+          </Link>
         </div>
 
         <dl className="mt-12 grid grid-cols-3 border border-zinc-800 bg-zinc-950/70 divide-x divide-zinc-800 max-w-2xl">

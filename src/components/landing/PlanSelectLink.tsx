@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { useSelectedPlan } from "./SelectedPlanContext";
 
 /** Anchor that pre-selects modules/presets, then scrolls to #get-started. */
@@ -17,7 +18,7 @@ export default function PlanSelectLink({
 }) {
   const { applyPreset, setSelectedModules } = useSelectedPlan();
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (presetId) {
       applyPreset(presetId);
     } else if (modules && modules.length > 0) {
@@ -26,14 +27,16 @@ export default function PlanSelectLink({
     if (typeof window !== "undefined") {
       const el = document.getElementById("get-started");
       if (el) {
+        e.preventDefault();
         el.scrollIntoView({ behavior: "smooth" });
+        window.history.pushState(null, "", "/#get-started");
       }
     }
   };
 
   return (
-    <a href="#get-started" onClick={handleClick} className={className}>
+    <Link href="/#get-started" onClick={handleClick} className={className}>
       {children}
-    </a>
+    </Link>
   );
 }
