@@ -4,13 +4,11 @@ import Link from "next/link";
 
 export default function Nav() {
   const handleNavClick = (id: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
     if (typeof window !== "undefined") {
       const el = document.getElementById(id);
       if (el) {
-        e.preventDefault();
         el.scrollIntoView({ behavior: "smooth" });
-        // Strip any dynamic query parameters so the URL is simply /#section
-        window.history.pushState(null, "", `/#${id}`);
       }
     }
   };
@@ -28,6 +26,7 @@ export default function Nav() {
         <nav aria-label="Main" className="flex shrink-0 items-center gap-4 sm:gap-6">
           <Link
             href="/#about"
+            scroll={false}
             onClick={handleNavClick("about")}
             className="hidden sm:inline font-mono text-xs uppercase tracking-wider text-zinc-400 hover:text-emerald-400 transition-colors"
           >
@@ -35,6 +34,7 @@ export default function Nav() {
           </Link>
           <Link
             href="/#services"
+            scroll={false}
             onClick={handleNavClick("services")}
             className="hidden sm:inline font-mono text-xs uppercase tracking-wider text-zinc-400 hover:text-emerald-400 transition-colors"
           >
@@ -42,6 +42,7 @@ export default function Nav() {
           </Link>
           <Link
             href="/#plans"
+            scroll={false}
             onClick={handleNavClick("plans")}
             className="font-mono text-xs uppercase tracking-wider text-zinc-400 hover:text-emerald-400 transition-colors"
           >
@@ -49,6 +50,7 @@ export default function Nav() {
           </Link>
           <Link
             href="/#checkup"
+            scroll={false}
             onClick={handleNavClick("checkup")}
             className="font-mono text-xs uppercase tracking-wider bg-zinc-900 border border-emerald-500/40 text-emerald-400 px-3 py-1.5 hover:bg-emerald-500 hover:text-zinc-950 transition-all whitespace-nowrap"
           >

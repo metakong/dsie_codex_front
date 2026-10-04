@@ -19,6 +19,7 @@ export default function PlanSelectLink({
   const { applyPreset, setSelectedModules } = useSelectedPlan();
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
     if (presetId) {
       applyPreset(presetId);
     } else if (modules && modules.length > 0) {
@@ -27,15 +28,13 @@ export default function PlanSelectLink({
     if (typeof window !== "undefined") {
       const el = document.getElementById("get-started");
       if (el) {
-        e.preventDefault();
         el.scrollIntoView({ behavior: "smooth" });
-        window.history.pushState(null, "", "/#get-started");
       }
     }
   };
 
   return (
-    <Link href="/#get-started" onClick={handleClick} className={className}>
+    <Link href="/#get-started" scroll={false} onClick={handleClick} className={className}>
       {children}
     </Link>
   );

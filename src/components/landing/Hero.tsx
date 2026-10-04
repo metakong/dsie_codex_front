@@ -45,12 +45,14 @@ export default function Hero() {
         <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
           <Link
             href="/#plans"
+            scroll={false}
             className="text-center bg-emerald-500 text-zinc-950 font-mono text-xs font-semibold uppercase tracking-wider px-6 py-4 sm:py-3.5 hover:bg-emerald-400 transition-colors"
           >
             Build Your Custom Plan &rarr;
           </Link>
           <Link
             href="/#checkup"
+            scroll={false}
             className="text-center border border-zinc-800 bg-zinc-900 text-zinc-300 font-mono text-xs uppercase tracking-wider px-6 py-4 sm:py-3.5 hover:border-emerald-500/50 hover:text-emerald-400 transition-colors"
           >
             What&apos;s Busywork Costing You?

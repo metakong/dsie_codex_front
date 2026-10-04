@@ -35,12 +35,11 @@ export default function ModularPricing() {
   };
 
   const scrollToApplication = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
     if (typeof window !== "undefined") {
       const el = document.getElementById("checkup");
       if (el) {
-        e.preventDefault();
         el.scrollIntoView({ behavior: "smooth" });
-        window.history.pushState(null, "", "/#checkup");
       }
     }
   };
@@ -132,6 +131,7 @@ export default function ModularPricing() {
             </div>
             <Link
               href="/#checkup"
+              scroll={false}
               onClick={scrollToApplication}
               className="text-xs font-mono uppercase tracking-wider text-emerald-400 hover:text-emerald-300 underline inline-flex items-center"
             >
@@ -303,6 +303,7 @@ export default function ModularPricing() {
           </div>
           <Link
             href="/#checkup"
+            scroll={false}
             onClick={scrollToApplication}
             className="shrink-0 text-emerald-400 hover:text-emerald-300 underline uppercase tracking-wider inline-flex items-center"
           >
