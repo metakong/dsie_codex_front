@@ -297,12 +297,13 @@ export default function ModularPricing() {
             <strong className="text-zinc-200">Zero Lock-In Commitment:</strong> Add or remove modules at any time.
             Bills are flat monthly rates with transparent invoicing. Based locally in Springfield, MO.
           </div>
-          <button
+          <a
+            href="#checkup"
             onClick={scrollToApplication}
-            className="shrink-0 text-emerald-400 hover:text-emerald-300 underline uppercase tracking-wider"
+            className="shrink-0 text-emerald-400 hover:text-emerald-300 underline uppercase tracking-wider inline-flex items-center"
           >
             Apply for an Operational Audit ({selectedCount} active) &rarr;
-          </button>
+          </a>
         </div>
       </div>
     </section>

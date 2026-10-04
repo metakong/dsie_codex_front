@@ -76,7 +76,15 @@ export default function Checkup() {
   const [disconnectedApps, setDisconnectedApps] = useState(3);
 
   // Form state
-  const [form, setForm] = useState({ contactName: "", companyName: "", email: "", phone: "", website: "" });
+  const [form, setForm] = useState({
+    contactName: "",
+    companyName: "",
+    email: "",
+    phone: "",
+    website: "",
+    bottleneck: "",
+    attribution: "",
+  });
   const [status, setStatus] = useState<"idle" | "submitting" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [referenceId, setReferenceId] = useState<string | null>(null);
@@ -97,8 +105,10 @@ export default function Checkup() {
     setSelectedModules(recs);
   };
 
-  const update = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
-    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+  const update =
+    (field: keyof typeof form) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -260,7 +270,7 @@ export default function Checkup() {
                 </span>
                 <h3 className="text-xl font-bold text-zinc-100 mt-1">Apply for an Operational Audit</h3>
                 <p className="mt-1 text-sm text-zinc-400">
-                  Tell me which modules you think you need. This is an application, not a purchase.
+                  You are losing an estimated <strong className="text-red-400 font-mono">{formatUSD(wastedMonthlyCost)}/mo</strong> to operational friction. It costs <strong className="text-emerald-400 font-mono">{formatUSD(currentPlanCost)}/mo</strong> for me to fix it. Tell me what you need below. This is an application, not a purchase.
                 </p>
               </div>
 
@@ -370,7 +380,7 @@ export default function Checkup() {
                 </details>
               </div>
 
-              {/* CONTACT DETAILS */}
+              {/* CONTACT & QUALIFICATION DETAILS */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="contactName" className={labelClass}>Your name</label>
@@ -393,6 +403,38 @@ export default function Checkup() {
                   </label>
                   <input id="phone" type="tel" maxLength={30} autoComplete="tel" inputMode="tel"
                     value={form.phone} onChange={update("phone")} className={inputClass} />
+                </div>
+                <div className="sm:col-span-2">
+                  <label htmlFor="bottleneck" className={labelClass}>
+                    What is the #1 operational bottleneck bleeding profit from your business right now?
+                  </label>
+                  <textarea
+                    id="bottleneck"
+                    required
+                    rows={3}
+                    minLength={5}
+                    maxLength={1000}
+                    placeholder="e.g. Estimates take 4 days to get out, technicians re-type paperwork at night, or invoices aren't getting tracked in QuickBooks..."
+                    value={form.bottleneck}
+                    onChange={update("bottleneck")}
+                    className={inputClass}
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label htmlFor="attribution" className={labelClass}>
+                    How did you hear about me? (Be specific)
+                  </label>
+                  <input
+                    id="attribution"
+                    type="text"
+                    required
+                    minLength={2}
+                    maxLength={200}
+                    placeholder="e.g. Referral from [Name], LinkedIn, local trade association, Google..."
+                    value={form.attribution}
+                    onChange={update("attribution")}
+                    className={inputClass}
+                  />
                 </div>
               </div>
 

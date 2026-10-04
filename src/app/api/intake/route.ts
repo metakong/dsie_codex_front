@@ -8,6 +8,8 @@ const intakeSchema = z
     companyName: z.string().trim().min(2, "Company name is required").max(120),
     email: z.string().email("Valid email required").max(200),
     phone: z.string().trim().max(30).optional().default(""),
+    bottleneck: z.string().trim().min(3, "Operational bottleneck description is required").max(1000),
+    attribution: z.string().trim().min(2, "Referral source is required").max(200),
     selectedModules: z.array(z.string()).min(1, "At least Base Retainer must be selected"),
     crewSize: z.number().int().min(1).max(500),
     paperworkHours: z.number().min(0).max(80),

@@ -27,14 +27,12 @@ export default function About() {
 
           <p className="mt-4 text-base sm:text-lg text-zinc-300 leading-relaxed">
             <strong className="text-zinc-100">
-              For nearly 30 years, I&apos;ve operated in the engine rooms of corporate America
-            </strong>
-            , fixing broken systems and stopping revenue leaks for scaling companies.
+              For nearly 30 years, I&apos;ve operated in the engine rooms of corporate America.
+            </strong>{" "}
+            I don&apos;t just hand over a PDF of recommendations; I build the operational frameworks that fix the problem. My systems have anchored a $400M revenue growth phase for an e-commerce enterprise and driven a 900% increase in corporate acquisitions for a global private equity firm.
           </p>
           <p className="mt-4 text-sm sm:text-base text-zinc-400 leading-relaxed">
-            I built The DSIE Codex because I enjoy helping honest, hardworking people see through marketing
-            B.S. My goal is to give you the systems to compete with massive corporations that have bigger
-            budgets but less integrity.
+            I built The DSIE Codex because I enjoy helping honest, hardworking people see through marketing B.S. The practical difference between a consultant and a fractional executive is authority. A consultant advises the people making decisions; I integrate directly into your business to execute the solutions, giving you the systems to compete with massive corporations who have bigger budgets but less integrity.
           </p>
 
           <aside
