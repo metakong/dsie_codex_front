@@ -52,40 +52,40 @@ const applySchema = z
 const generateReferenceId = () => `DSIE-${Date.now().toString(36).toUpperCase()}`;
 
 export async function POST(req: NextRequest) {
-  let body: unknown;
   try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json(
-      { success: false, error: "Malformed JSON payload" },
-      { status: 400 }
-    );
-  }
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json(
+        { success: false, error: "Malformed JSON payload" },
+        { status: 400 }
+      );
+    }
 
-  // Honeypot check
-  if (body && typeof body === "object" && "website" in body && (body as { website?: unknown }).website) {
-    return NextResponse.json({ success: true, referenceId: generateReferenceId() }, { status: 200 });
-  }
+    // Honeypot check
+    if (body && typeof body === "object" && "website" in body && (body as { website?: unknown }).website) {
+      return NextResponse.json({ success: true, referenceId: generateReferenceId() }, { status: 200 });
+    }
 
-  const parsed = applySchema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json(
-      { success: false, errors: z.flattenError(parsed.error).fieldErrors },
-      { status: 400 }
-    );
-  }
+    const parsed = applySchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { success: false, errors: z.flattenError(parsed.error).fieldErrors },
+        { status: 400 }
+      );
+    }
 
-  const data = parsed.data;
-  const referenceId = generateReferenceId();
-  const sanitizedModules = sanitizeSelectedModules(data.selectedModules);
-  const calculatedTotal = calculateTotalMonthlyCost(data.selectedModules);
-  const timestamp = new Date().toISOString();
+    const data = parsed.data;
+    const referenceId = generateReferenceId();
+    const sanitizedModules = sanitizeSelectedModules(data.selectedModules);
+    const calculatedTotal = calculateTotalMonthlyCost(data.selectedModules);
+    const timestamp = new Date().toISOString();
 
-  // Retrieve Cloudflare context & bindings
-  const cfContext = getRequestContext();
-  const env = cfContext?.env;
+    // Retrieve Cloudflare context & bindings
+    const cfContext = getRequestContext();
+    const env = cfContext?.env;
 
-  try {
     // 1. D1 Database Execution: Persist application payload
     if (env?.DB) {
       await env.DB.prepare(
@@ -137,6 +137,7 @@ export async function POST(req: NextRequest) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(webhookPayload),
+      redirect: "follow",
     });
 
     if (!webhookRes.ok) {
@@ -151,15 +152,11 @@ export async function POST(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (err: unknown) {
-    const errorMsg = err instanceof Error ? err.message : "Internal Server Error";
-    console.error("[DSIE APPLY ERROR]:", errorMsg);
-    return NextResponse.json(
-      {
-        success: false,
-        error: errorMsg,
-      },
-      { status: 500 }
-    );
+  } catch (error) {
+    console.error("[DSIE APPLY ERROR]:", error);
+    return NextResponse.json({ 
+      success: false, 
+      error: error instanceof Error ? error.message : "Unknown API error" 
+    }, { status: 500 });
   }
 }

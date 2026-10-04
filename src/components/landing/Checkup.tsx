@@ -130,20 +130,38 @@ export default function Checkup() {
           estimatedMonthlyCost: currentPlanCost,
         }),
       });
-      const data = (await res.json()) as {
+
+      let responseData: {
         success?: boolean;
         message?: string;
         error?: string;
         referenceId?: string;
       };
-      if (!res.ok || data.success === false) {
+
+      try {
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          responseData = await res.json();
+        } else {
+          const textData = await res.text();
+          throw new Error(textData || "An unexpected server error occurred.");
+        }
+      } catch (parseError: unknown) {
         throw new Error(
-          data.error ||
-          data.message ||
+          parseError instanceof Error
+            ? parseError.message
+            : "An unexpected server error occurred."
+        );
+      }
+
+      if (!res.ok || responseData.success === false) {
+        throw new Error(
+          responseData.error ||
+          responseData.message ||
           "Error submitting application. Please try again or email sean@thedsiecodex.com directly."
         );
       }
-      setReferenceId(data.referenceId || null);
+      setReferenceId(responseData.referenceId || null);
       setIsSuccess(true);
       setIsSubmitting(false);
     } catch (err: unknown) {
