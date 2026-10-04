@@ -3,6 +3,18 @@
 import Link from "next/link";
 
 export default function Nav() {
+  const handleNavClick = (id: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (typeof window !== "undefined") {
+      const el = document.getElementById(id);
+      if (el) {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: "smooth" });
+        // Strip any dynamic query parameters so the URL is simply /#section
+        window.history.pushState(null, "", `/#${id}`);
+      }
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 py-4">
@@ -14,30 +26,34 @@ export default function Nav() {
           </span>
         </Link>
         <nav aria-label="Main" className="flex shrink-0 items-center gap-4 sm:gap-6">
-          <a
-            href="#about"
+          <Link
+            href="/#about"
+            onClick={handleNavClick("about")}
             className="hidden sm:inline font-mono text-xs uppercase tracking-wider text-zinc-400 hover:text-emerald-400 transition-colors"
           >
             About Me
-          </a>
-          <a
-            href="#services"
+          </Link>
+          <Link
+            href="/#services"
+            onClick={handleNavClick("services")}
             className="hidden sm:inline font-mono text-xs uppercase tracking-wider text-zinc-400 hover:text-emerald-400 transition-colors"
           >
             Services
-          </a>
-          <a
-            href="#plans"
+          </Link>
+          <Link
+            href="/#plans"
+            onClick={handleNavClick("plans")}
             className="font-mono text-xs uppercase tracking-wider text-zinc-400 hover:text-emerald-400 transition-colors"
           >
             Plans
-          </a>
-          <a
-            href="#checkup"
+          </Link>
+          <Link
+            href="/#checkup"
+            onClick={handleNavClick("checkup")}
             className="font-mono text-xs uppercase tracking-wider bg-zinc-900 border border-emerald-500/40 text-emerald-400 px-3 py-1.5 hover:bg-emerald-500 hover:text-zinc-950 transition-all whitespace-nowrap"
           >
             Apply for Audit
-          </a>
+          </Link>
         </nav>
       </div>
     </header>

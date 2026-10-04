@@ -127,12 +127,13 @@ export default function ModularPricing() {
                 Estimated Total: {formatUSD(totalMonthlyCost)}/mo
               </span>
             </div>
-            <button
+            <a
+              href="#checkup"
               onClick={scrollToApplication}
-              className="text-xs font-mono uppercase tracking-wider text-emerald-400 hover:text-emerald-300 underline"
+              className="text-xs font-mono uppercase tracking-wider text-emerald-400 hover:text-emerald-300 underline inline-flex items-center"
             >
               Apply for an Operational Audit &rarr;
-            </button>
+            </a>
           </div>
         </div>
 

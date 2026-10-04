@@ -30,10 +30,14 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env & secret files (never commit)
 .env*
+.env*.local
+.dev.vars
+.dev.vars.*
 !.env.local.example
 !.env.example
+!.dev.vars.example
 
 # vercel
 .vercel
@@ -58,5 +62,3 @@ skills/
 # cloudflare / opennext build output & local secrets
 /.open-next/
 /.wrangler/
-.dev.vars*
-!.dev.vars.example

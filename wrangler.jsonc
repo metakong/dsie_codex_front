@@ -7,5 +7,18 @@
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "dsie-codex-db",
+      "database_id": "eaf1d613-053d-4140-a169-f4a0c7047109"
+    }
+  ],
+  "send_email": [
+    {
+      "name": "SEAN_EMAIL",
+      "destination_address": "sean@thedsiecodex.com"
+    }
+  ]
 }

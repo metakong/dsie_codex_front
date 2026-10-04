@@ -85,7 +85,8 @@ export default function Checkup() {
     bottleneck: "",
     attribution: "",
   });
-  const [status, setStatus] = useState<"idle" | "submitting" | "error">("idle");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [referenceId, setReferenceId] = useState<string | null>(null);
 
@@ -99,6 +100,7 @@ export default function Checkup() {
   const workWeeks = totalMonthlyHours / 40;
 
   const currentPlanCost = calculateTotalMonthlyCost(selectedModules);
+  const estimatedMonthlyCost = formatUSD(currentPlanCost);
 
   const handleApplyRecommended = () => {
     const recs = recommendModulesForCrew(crewSize);
@@ -112,11 +114,11 @@ export default function Checkup() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("submitting");
+    setIsSubmitting(true);
     setErrorMessage(null);
 
     try {
-      const res = await fetch("/api/intake", {
+      const res = await fetch("/api/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -128,16 +130,30 @@ export default function Checkup() {
           estimatedMonthlyCost: currentPlanCost,
         }),
       });
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || "Application submission failed. Please check the fields.");
+      const data = (await res.json()) as {
+        success?: boolean;
+        message?: string;
+        error?: string;
+        referenceId?: string;
+      };
+      if (!res.ok || data.success === false) {
+        throw new Error(
+          data.error ||
+          data.message ||
+          "Error submitting application. Please try again or email sean@thedsiecodex.com directly."
+        );
       }
-      setReferenceId(data.referenceId);
-      setStatus("idle");
+      setReferenceId(data.referenceId || null);
+      setIsSuccess(true);
+      setIsSubmitting(false);
     } catch (err: unknown) {
       console.error("Operational audit application failed", err);
-      setStatus("error");
-      setErrorMessage(err instanceof Error ? err.message : "Something went wrong submitting your application.");
+      setIsSubmitting(false);
+      setErrorMessage(
+        err instanceof Error
+          ? err.message
+          : "Error submitting application. Please try again or email sean@thedsiecodex.com directly."
+      );
     }
   };
 
@@ -253,13 +269,13 @@ export default function Checkup() {
 
         {/* OPERATIONAL AUDIT APPLICATION FORM */}
         <div id="get-started" className="scroll-mt-24 mt-10 pt-8 border-t border-zinc-800">
-          {referenceId ? (
+          {isSuccess ? (
             <div className="p-6 border border-emerald-500/40 bg-emerald-500/10 text-center" role="status">
               <span className="font-mono text-emerald-400 font-bold text-sm">
                 APPLICATION RECEIVED &middot; REF {referenceId}
               </span>
               <p className="text-sm text-zinc-300 mt-2">
-                Thanks{firstName ? `, ${firstName}` : ""}. I&apos;ve received your application ({selectedModules.length} modules, est. {formatUSD(currentPlanCost)}/mo). I&apos;ll review it personally and reach out within 24 hours to schedule your audit.
+                Thanks{firstName ? `, ${firstName}` : ""}. I&apos;ve received your application ({selectedModules.length} modules, est. {estimatedMonthlyCost}/mo). I&apos;ll review it personally and reach out within 24 hours to schedule your audit.
               </p>
             </div>
           ) : (
@@ -384,25 +400,64 @@ export default function Checkup() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="contactName" className={labelClass}>Your name</label>
-                  <input id="contactName" type="text" required minLength={2} maxLength={100} autoComplete="name"
-                    value={form.contactName} onChange={update("contactName")} className={inputClass} />
+                  <input
+                    id="contactName"
+                    name="contactName"
+                    type="text"
+                    required
+                    minLength={2}
+                    maxLength={100}
+                    autoComplete="name"
+                    value={form.contactName}
+                    onChange={update("contactName")}
+                    className={inputClass}
+                  />
                 </div>
                 <div>
                   <label htmlFor="companyName" className={labelClass}>Company name</label>
-                  <input id="companyName" type="text" required minLength={2} maxLength={120} autoComplete="organization"
-                    value={form.companyName} onChange={update("companyName")} className={inputClass} />
+                  <input
+                    id="companyName"
+                    name="companyName"
+                    type="text"
+                    required
+                    minLength={2}
+                    maxLength={120}
+                    autoComplete="organization"
+                    value={form.companyName}
+                    onChange={update("companyName")}
+                    className={inputClass}
+                  />
                 </div>
                 <div>
                   <label htmlFor="email" className={labelClass}>Email</label>
-                  <input id="email" type="email" required maxLength={200} autoComplete="email" inputMode="email"
-                    value={form.email} onChange={update("email")} className={inputClass} />
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    maxLength={200}
+                    autoComplete="email"
+                    inputMode="email"
+                    value={form.email}
+                    onChange={update("email")}
+                    className={inputClass}
+                  />
                 </div>
                 <div>
                   <label htmlFor="phone" className={labelClass}>
                     Phone <span className="normal-case tracking-normal text-zinc-600">(optional)</span>
                   </label>
-                  <input id="phone" type="tel" maxLength={30} autoComplete="tel" inputMode="tel"
-                    value={form.phone} onChange={update("phone")} className={inputClass} />
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    maxLength={30}
+                    autoComplete="tel"
+                    inputMode="tel"
+                    value={form.phone}
+                    onChange={update("phone")}
+                    className={inputClass}
+                  />
                 </div>
                 <div className="sm:col-span-2">
                   <label htmlFor="bottleneck" className={labelClass}>
@@ -410,6 +465,7 @@ export default function Checkup() {
                   </label>
                   <textarea
                     id="bottleneck"
+                    name="bottleneck"
                     required
                     rows={3}
                     minLength={5}
@@ -426,6 +482,7 @@ export default function Checkup() {
                   </label>
                   <input
                     id="attribution"
+                    name="attribution"
                     type="text"
                     required
                     minLength={2}
@@ -441,15 +498,16 @@ export default function Checkup() {
               {/* Honeypot */}
               <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
                 <label htmlFor="website">Website</label>
-                <input id="website" type="text" tabIndex={-1} autoComplete="off"
-                  value={form.website} onChange={update("website")} />
+                <input
+                  id="website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={form.website}
+                  onChange={update("website")}
+                />
               </div>
-
-              {status === "error" && (
-                <p role="alert" className="border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-                  {errorMessage || "Something went wrong sending your application. Please check the fields and try again."}
-                </p>
-              )}
 
               {/* MANDATORY DISCLAIMER AS REQUESTED */}
               <div className="border border-zinc-800 bg-zinc-900/30 p-4 text-xs font-mono text-zinc-400 leading-relaxed">
@@ -457,16 +515,24 @@ export default function Checkup() {
                 Submitting your module selections does not lock you into a package. It is simply a request for a face-to-face operational audit to see if we are a good fit. If we aren&apos;t, I will still provide you with a custom PDF report detailing potential solutions based on the data you provide.
               </div>
 
+              {/* ERROR ALERT ABOVE SUBMIT BUTTON */}
+              {errorMessage && (
+                <div role="alert" className="border border-red-500/50 bg-red-950/40 p-4 text-xs font-mono text-red-400 leading-relaxed">
+                  <strong className="font-bold text-red-300 block mb-0.5">Submission Error:</strong>
+                  {errorMessage}
+                </div>
+              )}
+
               <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 pt-2">
                 <span className="font-mono text-[11px] text-zinc-500 text-center sm:text-left">
                   Zero sales pressure. Straight talk about systems that work.
                 </span>
                 <button
                   type="submit"
-                  disabled={status === "submitting"}
+                  disabled={isSubmitting}
                   className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-mono text-xs font-semibold uppercase tracking-wider px-6 py-3.5 sm:py-3 transition-colors disabled:opacity-50"
                 >
-                  {status === "submitting" ? "Submitting…" : "Apply for an Operational Audit"}
+                  {isSubmitting ? "Sending Application..." : "Apply for an Operational Audit"}
                 </button>
               </div>
             </form>

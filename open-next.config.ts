@@ -9,7 +9,7 @@ const config = {
       queue: "dummy",
     },
   },
-  edgeExternals: ["node:crypto"],
+  edgeExternals: ["node:crypto", "cloudflare:email"],
   middleware: {
     external: true,
     override: {
