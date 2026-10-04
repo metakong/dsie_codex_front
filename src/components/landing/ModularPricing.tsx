@@ -10,7 +10,6 @@ import {
   QUICK_BUNDLES,
   calculateTotalMonthlyCost,
   formatUSD,
-  MODULE_MAP,
   type PricingModule,
   type ModuleCategory,
 } from "@/lib/plans";
@@ -19,7 +18,6 @@ import { useSelectedPlan } from "./SelectedPlanContext";
 export default function ModularPricing() {
   const { selectedModules, toggleModule, applyPreset, setSelectedModules } = useSelectedPlan();
   const [activeTab, setActiveTab] = useState<ModuleCategory | "all">("all");
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const totalMonthlyCost = calculateTotalMonthlyCost(selectedModules);
   const selectedCount = selectedModules.length;
@@ -35,10 +33,9 @@ export default function ModularPricing() {
     setSelectedModules([BASE_RETAINER_MODULE.id]);
   };
 
-  const scrollToCheckout = () => {
-    setIsDrawerOpen(false);
+  const scrollToApplication = () => {
     if (typeof window !== "undefined") {
-      const el = document.getElementById("get-started");
+      const el = document.getElementById("checkup");
       if (el) {
         el.scrollIntoView({ behavior: "smooth" });
       }
@@ -60,8 +57,7 @@ export default function ModularPricing() {
             <span className="text-emerald-400">Pay Only For What You Use.</span>
           </h2>
           <p className="mt-3 text-sm sm:text-base text-zinc-400 leading-relaxed">
-            Trade owners hate paying for bloated software bundles they don&apos;t need. Start with our mandatory{" "}
-            <strong className="text-zinc-200">$99/mo Base Access Retainer</strong>, then toggle the exact tech, sales, and billing modules your shop needs.
+            Stop paying for and wasting your time on software you don&apos;t need and tasks you don&apos;t want to deal with. Start with only a $99/mo Base Access Retainer, then toggle the tech, sales, and revenue operations modules your business needs.
           </p>
         </div>
 
@@ -118,6 +114,25 @@ export default function ModularPricing() {
                 </button>
               );
             })}
+          </div>
+
+          {/* Inline Selection Summary Bar */}
+          <div className="mt-4 pt-3 border-t border-zinc-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-xs uppercase tracking-wider text-zinc-400">
+                Selected Modules: <strong className="text-zinc-100">{selectedCount}</strong>
+              </span>
+              <span className="text-zinc-600">&middot;</span>
+              <span className="font-mono text-sm font-bold text-emerald-400">
+                Estimated Total: {formatUSD(totalMonthlyCost)}/mo
+              </span>
+            </div>
+            <button
+              onClick={scrollToApplication}
+              className="text-xs font-mono uppercase tracking-wider text-emerald-400 hover:text-emerald-300 underline"
+            >
+              Apply for an Operational Audit &rarr;
+            </button>
           </div>
         </div>
 
@@ -205,7 +220,7 @@ export default function ModularPricing() {
                   <span className="font-mono text-xs uppercase tracking-widest text-emerald-400 font-bold">
                     TechOps Add-Ons
                   </span>
-                  <span className="ml-2 font-mono text-xs text-zinc-400">{"// Field Tech & Shop Wi-Fi"}</span>
+                  <span className="ml-2 font-mono text-xs text-zinc-400">{"// Field Tech & Facility Wi-Fi"}</span>
                 </div>
                 <span className="font-mono text-xs text-zinc-500">A&apos;la carte options</span>
               </div>
@@ -283,84 +298,12 @@ export default function ModularPricing() {
             Bills are flat monthly rates with transparent invoicing. Based locally in Springfield, MO.
           </div>
           <button
-            onClick={scrollToCheckout}
+            onClick={scrollToApplication}
             className="shrink-0 text-emerald-400 hover:text-emerald-300 underline uppercase tracking-wider"
           >
-            Review Selected Plan ({selectedCount} active) &rrarr;
+            Apply for an Operational Audit ({selectedCount} active) &rarr;
           </button>
         </div>
-      </div>
-
-      {/* STICKY BOTTOM CALCULATOR BAR FOR MOBILE & DESKTOP */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-emerald-500/40 bg-zinc-950/95 backdrop-blur-md px-4 py-3 sm:py-3.5 shadow-2xl shadow-emerald-950">
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-3 sm:gap-6">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-              className="flex items-center gap-2 text-left group cursor-pointer focus:outline-none"
-              title="Click to expand itemized breakdown"
-            >
-              <div className="flex h-9 w-9 items-center justify-center border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-mono text-xs font-bold">
-                {selectedCount}
-              </div>
-              <div>
-                <div className="font-mono text-[10px] uppercase tracking-wider text-zinc-400 flex items-center gap-1 group-hover:text-emerald-400">
-                  <span>Selected Modules</span>
-                  <span className="text-[9px] text-zinc-500">{isDrawerOpen ? "▲ Hide" : "▼ Breakdown"}</span>
-                </div>
-                <div className="font-mono text-xl sm:text-2xl font-bold text-emerald-400">
-                  {formatUSD(totalMonthlyCost)}
-                  <span className="text-xs text-zinc-400 font-normal"> /mo</span>
-                </div>
-              </div>
-            </button>
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-              className="hidden sm:inline-block font-mono text-xs text-zinc-400 hover:text-zinc-200 border border-zinc-800 bg-zinc-900 px-3 py-2.5 transition-colors"
-            >
-              {isDrawerOpen ? "Hide Breakdown" : "View Breakdown"}
-            </button>
-            <button
-              onClick={scrollToCheckout}
-              className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-mono text-xs font-bold uppercase tracking-wider px-4 sm:px-6 py-2.5 sm:py-3 transition-colors shadow-lg shadow-emerald-950/50 whitespace-nowrap"
-            >
-              Lock In This Plan ({formatUSD(totalMonthlyCost)}/mo)
-            </button>
-          </div>
-        </div>
-
-        {/* EXPANDABLE ITEMIZED BREAKDOWN DRAWER */}
-        {isDrawerOpen && (
-          <div className="max-w-6xl mx-auto mt-3 pt-3 border-t border-zinc-800 max-h-60 overflow-y-auto font-mono text-xs">
-            <div className="flex justify-between items-center text-zinc-400 mb-2 pb-1 border-b border-zinc-900">
-              <span className="uppercase text-[11px]">Itemized Back Office Breakdown</span>
-              <button onClick={() => setIsDrawerOpen(false)} className="text-zinc-500 hover:text-zinc-300">
-                ✕ Close
-              </button>
-            </div>
-            <ul className="space-y-1.5">
-              {selectedModules.map((id) => {
-                const mod = MODULE_MAP[id];
-                if (!mod) return null;
-                return (
-                  <li key={id} className="flex items-center justify-between text-zinc-300 bg-zinc-900/50 px-2.5 py-1">
-                    <span className="flex items-center gap-2">
-                      <span className="text-emerald-400 font-bold">✓</span>
-                      <span>{mod.title}</span>
-                      {mod.isMandatory && (
-                        <span className="text-[9px] text-zinc-500 uppercase">(Base)</span>
-                      )}
-                    </span>
-                    <span className="text-emerald-400 font-bold">{formatUSD(mod.price)}/mo</span>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        )}
       </div>
     </section>
   );

@@ -55,14 +55,14 @@ const PILLARS: {
     number: "01",
     name: "TechOps",
     nickname: "The Toolkit",
-    headline: "Keep the crew working, not troubleshooting.",
-    body: "Tablets that sync, printers that print, Wi-Fi that reaches the back of the shop, and email that stays out of spam. All without paying $60k a year for an IT guy.",
+    headline: "Keep your team working, not troubleshooting.",
+    body: "Tablets that sync, printers that print, Wi-Fi that reaches the back of the facility, and email that stays out of spam. All without paying $60k a year for an in-house IT hire.",
     items: [
-      "Tablets & phones locked down in trucks",
-      "Yard Wi-Fi, printers & spam defense",
+      "Field tablets & phones locked down",
+      "Facility Wi-Fi, printers & spam defense",
       "1-click new hire software onboarding",
     ],
-    fixes: "Techs burning paid hours on frozen screens",
+    fixes: "Technicians burning paid hours on frozen screens",
   },
   {
     key: "sales",
@@ -101,13 +101,13 @@ export default function Pillars() {
       <div className="max-w-6xl mx-auto">
         <div className="mb-12 max-w-3xl">
           <span className="font-mono text-xs text-emerald-400 uppercase tracking-widest">
-            What We Handle
+            What I Handle
           </span>
           <h2 className="text-2xl sm:text-3xl font-bold text-zinc-100 mt-1">
             Modular Back Office. Zero Bloat.
           </h2>
           <p className="mt-3 text-sm sm:text-base text-zinc-400 leading-relaxed">
-            Start with our mandatory <strong className="text-zinc-200">$99/mo Base Access Retainer</strong> for guaranteed triage and ticketing. Then add modular TechOps, SalesOps, or RevOps services to fit your shop exactly.
+            Start with a <strong className="text-zinc-200">$99/mo Base Access Retainer</strong> for guaranteed access to services. Then add modular TechOps, SalesOps, or RevOps services to fit your precise business needs.
           </p>
         </div>
 
@@ -157,7 +157,7 @@ export default function Pillars() {
             Do the math
           </span>
           <p className="text-sm text-zinc-300 leading-relaxed">
-            An entry-level IT hire runs about <strong className="text-zinc-100">$60,000 a year</strong> before benefits. With our interactive modular pricing starting at <strong className="text-emerald-400">{formatUSD(BASE_RETAINER_MODULE.price)}/mo</strong>, you only pay for the exact TechOps, SalesOps, and RevOps modules your shop actually uses.
+            An entry-level IT hire runs about <strong className="text-zinc-100">$60,000 a year</strong> before benefits. With my modular pricing starting at <strong className="text-emerald-400">{formatUSD(BASE_RETAINER_MODULE.price)}/mo</strong>, you only pay for the exact TechOps, SalesOps, and RevOps modules your business actually uses.
           </p>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   BASE_RETAINER_MODULE,
   ADDON_MODULES,
+  MODULE_MAP,
   calculateTotalMonthlyCost,
   formatUSD,
   recommendModulesForCrew,
@@ -119,14 +120,14 @@ export default function Checkup() {
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.message || "Submission failed. Please check the fields.");
+        throw new Error(data.message || "Application submission failed. Please check the fields.");
       }
       setReferenceId(data.referenceId);
       setStatus("idle");
     } catch (err: unknown) {
-      console.error("Checkup request failed", err);
+      console.error("Operational audit application failed", err);
       setStatus("error");
-      setErrorMessage(err instanceof Error ? err.message : "Something went wrong submitting your request.");
+      setErrorMessage(err instanceof Error ? err.message : "Something went wrong submitting your application.");
     }
   };
 
@@ -140,13 +141,13 @@ export default function Checkup() {
         <div className="flex items-start justify-between gap-4 border-b border-zinc-800 pb-5 mb-8">
           <div>
             <span className="font-mono text-xs text-emerald-400 uppercase tracking-widest">
-              Free Back-Office Checkup &amp; Custom Quote
+              Free Operational Checkup &amp; Audit Application
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-zinc-100 mt-1">
-              What Is Office Busywork Costing Your Shop?
+              What Is Office Busywork Costing Your Business?
             </h2>
             <p className="mt-2 text-sm text-zinc-400">
-              Slide the bars to match your crew. Compare your wasted labor to your custom modular total below.
+              Slide the bars to match your team. Compare your wasted labor to your estimated modular total below.
             </p>
           </div>
           <div className="font-mono text-[11px] text-zinc-600 hidden sm:block whitespace-nowrap pt-1">
@@ -159,12 +160,12 @@ export default function Checkup() {
           <div className="space-y-7">
             <Slider
               id="crew-size"
-              label="How many people work for you?"
-              help="Count everyone: field techs, office staff, and yourself."
+              label="How many people work in your operation?"
+              help="Count everyone: field technicians, office staff, and leadership."
               value={crewSize}
               min={CREW_MIN}
               max={CREW_MAX}
-              display={`${crewSize}${crewSize === CREW_MAX ? "+" : ""} workers`}
+              display={`${crewSize}${crewSize === CREW_MAX ? "+" : ""} team members`}
               minLabel={`${CREW_MIN}`}
               maxLabel={`${CREW_MAX}+`}
               onChange={setCrewSize}
@@ -184,7 +185,7 @@ export default function Checkup() {
             <Slider
               id="disconnected-apps"
               label="Apps that don't talk to each other"
-              help="QuickBooks, scheduling apps, spreadsheets, paper notebooks…"
+              help="QuickBooks, scheduling tools, spreadsheets, paper notebooks…"
               value={disconnectedApps}
               min={0}
               max={6}
@@ -221,16 +222,16 @@ export default function Checkup() {
             </div>
 
             <div className="mt-5 pt-5 border-t border-zinc-800">
-              <div className="font-mono text-xs text-zinc-400 uppercase">Recommended for {crewSize} Workers</div>
+              <div className="font-mono text-xs text-zinc-400 uppercase">Recommended for {crewSize} Team Members</div>
               <p className="mt-1 text-xs text-zinc-300 leading-relaxed">
-                Auto-select recommended modules for a crew of {crewSize}:
+                Auto-select suggested modules for a team of {crewSize}:
               </p>
               <button
                 type="button"
                 onClick={handleApplyRecommended}
                 className="mt-3 block w-full text-center border border-emerald-500/40 text-emerald-400 font-mono text-xs uppercase tracking-wider py-2.5 hover:bg-emerald-500 hover:text-zinc-950 transition-colors"
               >
-                Apply Recommended Modules Setup
+                Apply Recommended Module Setup
               </button>
             </div>
           </div>
@@ -240,50 +241,105 @@ export default function Checkup() {
           Assumes ${HOURLY_COST}/hr blended labor cost, {HOURS_PER_APP_PER_WEEK} hrs/wk per non-syncing app, and 30 mins/wk tech trouble per worker.
         </p>
 
-        {/* CUSTOM MODULE SELECTION BREAKDOWN IN FORM */}
+        {/* OPERATIONAL AUDIT APPLICATION FORM */}
         <div id="get-started" className="scroll-mt-24 mt-10 pt-8 border-t border-zinc-800">
           {referenceId ? (
             <div className="p-6 border border-emerald-500/40 bg-emerald-500/10 text-center" role="status">
               <span className="font-mono text-emerald-400 font-bold text-sm">
-                REQUEST RECEIVED &middot; REF {referenceId}
+                APPLICATION RECEIVED &middot; REF {referenceId}
               </span>
               <p className="text-sm text-zinc-300 mt-2">
-                Thanks{firstName ? `, ${firstName}` : ""}. We&apos;ve saved your configured plan ({selectedModules.length} modules, {formatUSD(currentPlanCost)}/mo). We&apos;ll reach out within 24 hours to confirm your setup.
+                Thanks{firstName ? `, ${firstName}` : ""}. I&apos;ve received your application ({selectedModules.length} modules, est. {formatUSD(currentPlanCost)}/mo). I&apos;ll review it personally and reach out within 24 hours to schedule your audit.
               </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <h3 className="text-lg font-bold text-zinc-100">Review &amp; Submit Your Custom Back Office</h3>
+                <span className="font-mono text-xs text-emerald-400 uppercase tracking-widest font-semibold">
+                  Step 2 &middot; Application
+                </span>
+                <h3 className="text-xl font-bold text-zinc-100 mt-1">Apply for an Operational Audit</h3>
                 <p className="mt-1 text-sm text-zinc-400">
-                  Adjust your active modules below or submit your details to lock in your quote.
+                  Tell me which modules you think you need. This is an application, not a purchase.
                 </p>
               </div>
 
-              {/* ACTIVE MODULES CHECKLIST */}
-              <div className="border border-zinc-800 bg-zinc-900/50 p-4 sm:p-5">
-                <div className="flex items-center justify-between border-b border-zinc-800 pb-3 mb-3">
-                  <span className="font-mono text-xs text-emerald-400 font-bold uppercase tracking-wider">
-                    Configured Plan ({selectedModules.length} Modules)
-                  </span>
-                  <span className="font-mono text-base font-bold text-emerald-400">
-                    Total: {formatUSD(currentPlanCost)}/mo
-                  </span>
+              {/* INLINE SELECTED MODULES & TOTAL SUMMARY PANEL */}
+              <div className="border border-zinc-800 bg-zinc-900/60 p-4 sm:p-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-800 pb-3 mb-4">
+                  <div>
+                    <span className="font-mono text-xs text-emerald-400 font-bold uppercase tracking-wider">
+                      Selected Modules ({selectedModules.length})
+                    </span>
+                    <p className="text-[11px] text-zinc-500 font-mono mt-0.5">
+                      Pre-selected based on what you think your business needs:
+                    </p>
+                  </div>
+                  <div className="sm:text-right">
+                    <span className="font-mono text-[10px] uppercase text-zinc-500 block">Estimated Monthly Total</span>
+                    <span className="font-mono text-xl sm:text-2xl font-bold text-emerald-400">
+                      {formatUSD(currentPlanCost)}/mo
+                    </span>
+                  </div>
                 </div>
 
+                {/* Itemized List of Active Modules */}
                 <div className="space-y-2">
-                  {/* MANDATORY BASE ITEM */}
+                  {/* Mandatory Base */}
                   <div className="flex items-center justify-between text-xs font-mono bg-zinc-950 p-2.5 border border-emerald-500/30 text-zinc-200">
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-400">🔒</span>
                       <span className="font-bold">{BASE_RETAINER_MODULE.title}</span>
-                      <span className="text-[10px] text-zinc-500 uppercase">(Mandatory Base)</span>
+                      <span className="text-[10px] text-zinc-500 uppercase">(Mandatory Base Retainer)</span>
                     </div>
                     <span className="text-emerald-400 font-bold">{formatUSD(BASE_RETAINER_MODULE.price)}/mo</span>
                   </div>
 
-                  {/* ADDON MODULE TOGGLES */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                  {/* Selected Addon Modules Chips/List */}
+                  {selectedModules
+                    .filter((id) => id !== BASE_RETAINER_MODULE.id)
+                    .map((id) => {
+                      const mod = MODULE_MAP[id];
+                      if (!mod) return null;
+                      return (
+                        <div
+                          key={id}
+                          className="flex items-center justify-between text-xs font-mono bg-zinc-950/70 p-2 border border-zinc-800 text-zinc-300"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="text-emerald-400">✓</span>
+                            <span>{mod.title}</span>
+                            <span className="text-[10px] text-zinc-500">({mod.categoryLabel})</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-emerald-400 font-bold">+{formatUSD(mod.price)}/mo</span>
+                            <button
+                              type="button"
+                              onClick={() => toggleModule(id)}
+                              className="text-zinc-600 hover:text-red-400 transition-colors text-xs font-bold"
+                              title="Remove module"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                  {selectedModules.length === 1 && (
+                    <p className="text-[11px] font-mono text-zinc-500 italic py-1">
+                      No optional add-ons selected yet. You can select modules in the pricing calculator above or review your setup below.
+                    </p>
+                  )}
+                </div>
+
+                {/* Optional Module Checklist Toggle */}
+                <details className="mt-4 pt-3 border-t border-zinc-800 text-xs font-mono group">
+                  <summary className="cursor-pointer text-zinc-400 hover:text-emerald-400 transition-colors select-none">
+                    <span className="group-open:hidden">▶ Quick Add/Remove Add-On Modules</span>
+                    <span className="hidden group-open:inline">▼ Hide Module List</span>
+                  </summary>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-3">
                     {ADDON_MODULES.map((mod) => {
                       const isChecked = selectedModules.includes(mod.id);
                       return (
@@ -311,7 +367,7 @@ export default function Checkup() {
                       );
                     })}
                   </div>
-                </div>
+                </details>
               </div>
 
               {/* CONTACT DETAILS */}
@@ -349,20 +405,26 @@ export default function Checkup() {
 
               {status === "error" && (
                 <p role="alert" className="border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-                  {errorMessage || "Something went wrong sending your info. Please check the fields and try again."}
+                  {errorMessage || "Something went wrong sending your application. Please check the fields and try again."}
                 </p>
               )}
 
+              {/* MANDATORY DISCLAIMER AS REQUESTED */}
+              <div className="border border-zinc-800 bg-zinc-900/30 p-4 text-xs font-mono text-zinc-400 leading-relaxed">
+                <span className="text-zinc-200 font-bold block mb-1">Plain-English Notice:</span>
+                Submitting your module selections does not lock you into a package. It is simply a request for a face-to-face operational audit to see if we are a good fit. If we aren&apos;t, I will still provide you with a custom PDF report detailing potential solutions based on the data you provide.
+              </div>
+
               <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 pt-2">
                 <span className="font-mono text-[11px] text-zinc-500 text-center sm:text-left">
-                  No pushy sales calls. Just a 20-minute review of your back-office setup.
+                  Zero sales pressure. Straight talk about systems that work.
                 </span>
                 <button
                   type="submit"
                   disabled={status === "submitting"}
                   className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-mono text-xs font-semibold uppercase tracking-wider px-6 py-3.5 sm:py-3 transition-colors disabled:opacity-50"
                 >
-                  {status === "submitting" ? "Submitting…" : `Lock In Quote (${formatUSD(currentPlanCost)}/mo)`}
+                  {status === "submitting" ? "Submitting…" : "Apply for an Operational Audit"}
                 </button>
               </div>
             </form>

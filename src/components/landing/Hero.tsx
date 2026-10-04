@@ -29,14 +29,14 @@ export default function Hero() {
         </div>
 
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-zinc-100 max-w-4xl leading-[1.08]">
-          Stop Paying Your Top Tradesmen to Fix the Wi-Fi.
+          Stop Putting Out Fires. Start Preventing Them.
         </h1>
         <p className="mt-4 text-xl sm:text-2xl font-semibold text-emerald-400 max-w-3xl leading-snug">
-          Build your custom back office with modular Tech, Sales, and Billing add-ons.
+          Build a custom back office with modular Tech Operations, Sales Operations, and Revenue Operations services.
         </p>
 
         <p className="mt-6 text-base sm:text-lg text-zinc-400 max-w-2xl leading-relaxed">
-          We&apos;re the modular back office built for Springfield trade shops. Start with a $99/mo Base Access retainer, then pick only the tech, lead, and invoicing modules your crew needs.
+          The DSIE Codex is built for Springfield trades. Start with a $99/mo Base Access retainer, then pick only the tech, sales, and revenue operations modules you need.
         </p>
 
         <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">

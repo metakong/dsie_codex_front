@@ -6,13 +6,14 @@ export default function Nav() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 py-4">
-        <Link className="flex items-center gap-3 shrink-0" href="/">
-          <div className="h-3 w-3 bg-emerald-500 rounded-none animate-pulse" />
-          <span className="font-mono text-sm tracking-wider font-semibold text-zinc-100 uppercase">
-            THE DSIE CODEX <span className="hidden md:inline text-zinc-500">{"//"} BACK OFFICE</span>
+        <Link className="flex items-center gap-3 min-w-0" href="/">
+          <div className="h-3 w-3 shrink-0 bg-emerald-500 rounded-none animate-pulse" />
+          <span className="font-mono text-sm tracking-wider font-semibold text-zinc-100 uppercase truncate">
+            THE DSIE CODEX{" "}
+            <span className="hidden lg:inline text-zinc-500">{"//"} DIAGNOSE, STRATEGIZE, INTEGRATE, EXECUTE</span>
           </span>
         </Link>
-        <nav aria-label="Main" className="flex items-center gap-4 sm:gap-6">
+        <nav aria-label="Main" className="flex shrink-0 items-center gap-4 sm:gap-6">
           <a
             href="#services"
             className="hidden sm:inline font-mono text-xs uppercase tracking-wider text-zinc-400 hover:text-emerald-400 transition-colors"

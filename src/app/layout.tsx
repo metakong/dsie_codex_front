@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://thedsiecodex.com"),
   title: "The DSIE Codex | Fractional Back Office for the Trades — Springfield, MO",
   description:
-    "Fractional back office for Springfield trade and service crews. On-call field tech support, automated lead tracking, and streamlined billing on flat monthly plans.",
+    "Modular fractional back office for Springfield trade and service businesses. Tech, sales, and revenue operations delivered personally by a solo operator, starting at $99/mo.",
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.svg",

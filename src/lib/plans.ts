@@ -24,7 +24,7 @@ export const BASE_RETAINER_MODULE: PricingModule = {
   category: "base",
   categoryLabel: "Foundation (Mandatory)",
   shortDescription: "Guaranteed roster spot, 2 hours of remote break-fix triage, and direct ticketing access.",
-  fullDescription: "Guaranteed roster spot, 2 hours of remote break-fix triage, and direct access to our ticketing system.",
+  fullDescription: "Guaranteed roster spot, 2 hours of remote break-fix triage, and direct access to my ticketing system.",
   isMandatory: true,
   badge: "Required Foundation",
 };
@@ -41,13 +41,13 @@ export const TECHOPS_MODULES: PricingModule[] = [
   },
   {
     id: "fleet-tablet-lockdown",
-    title: "Fleet Tablet Lockdown",
+    title: "Field Device Lockdown",
     price: 79,
     category: "tech",
     categoryLabel: "TechOps",
     shortDescription: "Field devices locked to work apps. Remote wipe & automated app updates.",
-    fullDescription: "Field devices are locked to work apps only. We remotely wipe lost devices and push app updates automatically.",
-    badge: "Popular for Fleets",
+    fullDescription: "Field devices are locked to work apps only. I remotely wipe lost devices and push app updates automatically.",
+    badge: "Popular for Field Teams",
   },
   {
     id: "one-click-onboarding",
@@ -56,11 +56,11 @@ export const TECHOPS_MODULES: PricingModule[] = [
     category: "tech",
     categoryLabel: "TechOps",
     shortDescription: "Instantly create software accounts & send welcome guides for new hires.",
-    fullDescription: "When you hire someone, we instantly create all their software accounts and send them a welcome guide.",
+    fullDescription: "When you hire someone, I instantly create all their software accounts and send them a welcome guide.",
   },
   {
     id: "shop-network-shield",
-    title: "Shop Network Shield",
+    title: "Business Network Shield",
     price: 99,
     category: "tech",
     categoryLabel: "TechOps",
@@ -83,7 +83,7 @@ export const TECHOPS_MODULES: PricingModule[] = [
     category: "tech",
     categoryLabel: "TechOps",
     shortDescription: "Office server maintenance & nightly off-site vault backups.",
-    fullDescription: "We keep your old office server running and back up all your data to a secure off-site vault every night.",
+    fullDescription: "I keep your old office server running and back up all your data to a secure off-site vault every night.",
   },
 ];
 
@@ -124,7 +124,7 @@ export const SALESOPS_MODULES: PricingModule[] = [
     category: "sales",
     categoryLabel: "SalesOps",
     shortDescription: "Monthly fresh list of local property managers & facility directors for commercial sales.",
-    fullDescription: "Every month, we hand you a fresh, accurate list of local property managers and facility directors to feed your commercial sales.",
+    fullDescription: "Every month, I hand you a fresh, accurate list of local property managers and facility directors to feed your commercial sales.",
     badge: "B2B Growth",
   },
   {
@@ -176,7 +176,7 @@ export const REVOPS_MODULES: PricingModule[] = [
     category: "rev",
     categoryLabel: "RevOps",
     shortDescription: "Track estimated vs. actual labor & materials to see where you bled cash.",
-    fullDescription: "We track your estimated labor and materials against what was actually spent, showing you exactly where you bled cash on a job.",
+    fullDescription: "I track your estimated labor and materials against what was actually spent, showing you exactly where you bled cash on a job.",
     badge: "Margin Defense",
   },
   {
@@ -220,15 +220,15 @@ export interface QuickBundlePreset {
 export const QUICK_BUNDLES: QuickBundlePreset[] = [
   {
     id: "essential-starter",
-    name: "Starter Crew Pack",
-    description: "Base Access + Email Defender + Instant Lead Router + App-to-Accounting Bridge",
+    name: "Starter Team Pack",
+    description: "Base Access + In-Box Defender + Instant Lead Router + App-to-Accounting Bridge",
     moduleIds: ["base-retainer", "inbox-defender", "lead-router", "app-to-accounting"],
     badge: "Most Popular Starter",
   },
   {
     id: "fleet-tech-pack",
-    name: "Fleet & Yard Operations",
-    description: "Base Access + In-Box Defender + Tablet Lockdown + Shop Wi-Fi Shield",
+    name: "Field & Yard Operations",
+    description: "Base Access + In-Box Defender + Field Device Lockdown + Business Network Shield",
     moduleIds: ["base-retainer", "inbox-defender", "fleet-tablet-lockdown", "shop-network-shield"],
   },
   {
@@ -270,7 +270,7 @@ export function sanitizeSelectedModules(selectedIds: unknown): string[] {
   return Array.from(new Set(valid));
 }
 
-/** Recommend suggested add-on modules based on crew size. */
+/** Recommend suggested add-on modules based on team size. */
 export function recommendModulesForCrew(crewSize: number): string[] {
   const recs = ["base-retainer", "inbox-defender"];
   if (crewSize >= 5) {
@@ -295,7 +295,7 @@ export const ALL_PLANS = ALL_MODULES.map((m) => ({
   price: m.price,
   hours: m.isMandatory ? 2 : 4,
   bestFor: m.categoryLabel,
-  crewRange: "All Trade Crews",
+  crewRange: "All Trade Teams",
   tierNumber: "Module",
   tierLabel: m.categoryLabel,
 }));

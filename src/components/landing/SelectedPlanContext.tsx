@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
 import {
   BASE_RETAINER_MODULE,
   QUICK_BUNDLES,
@@ -16,62 +16,56 @@ type SelectedPlanState = {
 
 const SelectedPlanContext = createContext<SelectedPlanState | null>(null);
 
-const DEFAULT_PRESET = QUICK_BUNDLES[0].moduleIds; // Essential Starter Pack
+const DEFAULT_PRESET = QUICK_BUNDLES[0].moduleIds; // Starter Team Pack
+
+/*
+ * Hydration-safe URL reading: the server snapshot is always "" (default preset), so the
+ * server HTML and the first client render match. React then re-renders with the real
+ * `window.location.search`, applying any shared `?modules=` link without a mismatch.
+ */
+const subscribeNoop = () => () => {};
+const getClientSearch = () => window.location.search;
+const getServerSearch = () => "";
+
+function syncUrl(modules: string[]) {
+  const url = new URL(window.location.href);
+  url.searchParams.set("modules", modules.join(","));
+  window.history.replaceState(null, "", url.toString());
+}
 
 export function SelectedPlanProvider({ children }: { children: ReactNode }) {
-  const [selectedModules, setSelectedModulesState] = useState<string[]>(() => {
-    if (typeof window !== "undefined") {
-      const urlParams = new URLSearchParams(window.location.search);
-      const modulesParam = urlParams.get("modules");
-      if (modulesParam) {
-        const parsed = modulesParam.split(",").map((s) => s.trim());
-        return sanitizeSelectedModules(parsed);
-      }
-    }
-    return DEFAULT_PRESET;
-  });
+  const search = useSyncExternalStore(subscribeNoop, getClientSearch, getServerSearch);
+
+  const urlModules = useMemo(() => {
+    const param = new URLSearchParams(search).get("modules");
+    return param ? sanitizeSelectedModules(param.split(",").map((s) => s.trim())) : null;
+  }, [search]);
+
+  // null until the visitor makes a choice; until then fall back to the URL or default preset.
+  const [userModules, setUserModules] = useState<string[] | null>(null);
+  const selectedModules = userModules ?? urlModules ?? DEFAULT_PRESET;
 
   const setSelectedModules = (modules: string[]) => {
     const sanitized = sanitizeSelectedModules(modules);
-    setSelectedModulesState(sanitized);
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.set("modules", sanitized.join(","));
-      window.history.replaceState(null, "", url.toString());
-    }
+    setUserModules(sanitized);
+    syncUrl(sanitized);
   };
 
   const toggleModule = (moduleId: string) => {
     if (moduleId === BASE_RETAINER_MODULE.id) return; // Base Retainer is locked & mandatory
-    setSelectedModulesState((prev) => {
-      const isSelected = prev.includes(moduleId);
-      const next = isSelected ? prev.filter((id) => id !== moduleId) : [...prev, moduleId];
-      const sanitized = sanitizeSelectedModules(next);
-      if (typeof window !== "undefined") {
-        const url = new URL(window.location.href);
-        url.searchParams.set("modules", sanitized.join(","));
-        window.history.replaceState(null, "", url.toString());
-      }
-      return sanitized;
-    });
+    const next = selectedModules.includes(moduleId)
+      ? selectedModules.filter((id) => id !== moduleId)
+      : [...selectedModules, moduleId];
+    setSelectedModules(next);
   };
 
   const applyPreset = (presetId: string) => {
     const preset = QUICK_BUNDLES.find((b) => b.id === presetId);
-    if (preset) {
-      setSelectedModules(preset.moduleIds);
-    }
+    if (preset) setSelectedModules(preset.moduleIds);
   };
 
   return (
-    <SelectedPlanContext.Provider
-      value={{
-        selectedModules,
-        setSelectedModules,
-        toggleModule,
-        applyPreset,
-      }}
-    >
+    <SelectedPlanContext.Provider value={{ selectedModules, setSelectedModules, toggleModule, applyPreset }}>
       {children}
     </SelectedPlanContext.Provider>
   );
