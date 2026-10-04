@@ -3,7 +3,6 @@ import { z } from "zod";
 import { calculateTotalMonthlyCost, sanitizeSelectedModules } from "@/lib/plans";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
-export const runtime = "edge";
 
 /**
  * Accessor for Cloudflare runtime environment bindings via OpenNext
